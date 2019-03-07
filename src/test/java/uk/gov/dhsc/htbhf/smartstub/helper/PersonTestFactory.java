@@ -19,8 +19,20 @@ public class PersonTestFactory {
     /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person with no benefits or children.
      */
-    public static PersonDTO aPersonWithNoBenefitsAndNoChildren() {
-        final String nino = "BA000056C";
+    public static PersonDTO aPersonOnNoBenefitsAndNoChildren() {
+        final String nino = "BA000000C";
+        return PersonDTO.builder()
+                .dateOfBirth(DOB)
+                .nino(nino)
+                .address(aValidAddress())
+                .build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person with on universal credit with no children.
+     */
+    public static PersonDTO aPersonOnUniversalCreditWithNoChildren() {
+        final String nino = "BA000000A";
         return PersonDTO.builder()
                 .dateOfBirth(DOB)
                 .nino(nino)

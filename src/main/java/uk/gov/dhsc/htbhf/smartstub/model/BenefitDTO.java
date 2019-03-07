@@ -6,15 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor(onConstructor_ = {@JsonCreator})
 public class BenefitDTO {
 
-    @JsonProperty("benefits")
-    private final List<String> benefits;
+    @JsonProperty("benefit")
+    private final BenefitType benefit;
 
     @JsonProperty("numberOfChildrenUnderOne")
     private final Integer numberOfChildrenUnderOne;
