@@ -64,6 +64,18 @@ public class PersonTestFactory {
                 .build();
     }
 
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person not found.
+     */
+    public static PersonDTO aPersonNotFound() {
+        final String nino = "AA000000C";
+        return PersonDTO.builder()
+                .dateOfBirth(DOB)
+                .nino(nino)
+                .address(aValidAddress())
+                .build();
+    }
+
     private static AddressDTO aValidAddress() {
         return AddressDTO.builder()
                 .addressLine1(ADDRESS_LINE_1)

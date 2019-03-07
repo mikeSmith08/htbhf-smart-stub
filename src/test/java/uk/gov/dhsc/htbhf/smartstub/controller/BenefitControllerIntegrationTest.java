@@ -12,7 +12,9 @@ import uk.gov.dhsc.htbhf.smartstub.model.BenefitType;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonNotFound;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnNoBenefitsAndNoChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnUniversalCreditWithNoChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildrenUnderFour;
@@ -62,5 +64,14 @@ class BenefitControllerIntegrationTest {
         assertThat(benefit.getBody()).isNotNull();
         assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isEqualTo(0);
         assertThat(benefit.getBody().getNumberOfChildrenUnderFour()).isEqualTo(2);
+    }
+
+    @Test
+    void shouldReturnNotFoundResponseForMatchingNino() {
+        var person = aPersonNotFound();
+
+        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+
+        assertThat(benefit.getStatusCode()).isEqualTo(NOT_FOUND);
     }
 }

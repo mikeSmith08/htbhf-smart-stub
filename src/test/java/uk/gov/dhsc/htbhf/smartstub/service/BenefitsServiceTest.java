@@ -1,9 +1,12 @@
 package uk.gov.dhsc.htbhf.smartstub.service;
 
 import org.junit.jupiter.api.Test;
+import uk.gov.dhsc.htbhf.smartstub.exception.PersonNotFoundException;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitType;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonNotFound;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnNoBenefitsAndNoChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnUniversalCreditWithNoChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildrenUnderFour;
@@ -55,5 +58,15 @@ class BenefitsServiceTest {
         assertThat(benefit.getBenefit()).isNull();
         assertThat(benefit.getNumberOfChildrenUnderOne()).isEqualTo(3);
         assertThat(benefit.getNumberOfChildrenUnderFour()).isEqualTo(0);
+    }
+
+    @Test
+    void shouldReturnNullForPersonNotFoundNino() {
+        var person = aPersonNotFound();
+
+        assertThrows(PersonNotFoundException.class, () -> {
+            benefitsService.getBenefits(person.getNino().toCharArray());
+        });
+
     }
 }
