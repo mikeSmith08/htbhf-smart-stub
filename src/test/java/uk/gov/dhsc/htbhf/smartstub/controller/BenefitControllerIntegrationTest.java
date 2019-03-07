@@ -21,6 +21,8 @@ import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnUniv
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithAnInvalidNino;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildrenUnderFour;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithNoAddress;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithNoDateOfBirth;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithNoNino;
 
 @ExtendWith(SpringExtension.class)
@@ -106,5 +108,23 @@ class BenefitControllerIntegrationTest {
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
         assertThat(benefit.getBody()).isNotNull();
         assertThat(benefit.getBody().getMessage()).isEqualTo("Can not have more children under one than children four. Given values were 3, 1");
+    }
+
+    @Test
+    void shouldReturnBadRequestForMissingDateOfBirth() {
+        var person = aPersonWithNoDateOfBirth();
+
+        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+
+        assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
+    }
+
+    @Test
+    void shouldReturnBadRequestForMissingAddress() {
+        var person = aPersonWithNoAddress();
+
+        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+
+        assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 }

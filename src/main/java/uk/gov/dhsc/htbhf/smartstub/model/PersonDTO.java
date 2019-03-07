@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 @Data
@@ -20,9 +21,12 @@ public class PersonDTO {
     @JsonProperty("nino")
     private final String nino;
 
-    @JsonProperty("dob")
+    @NotNull
+    @Past
+    @JsonProperty("dateOfBirth")
     private final LocalDate dateOfBirth;
 
+    @NotNull
     @JsonProperty("address")
     private final AddressDTO address;
 }
