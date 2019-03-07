@@ -13,6 +13,7 @@ public class AddressDTO {
     @JsonProperty("addressLine1")
     private String addressLine1;
 
+    @JsonProperty("addressLine2")
     private String addressLine2;
 
     @JsonProperty("townOrCity")

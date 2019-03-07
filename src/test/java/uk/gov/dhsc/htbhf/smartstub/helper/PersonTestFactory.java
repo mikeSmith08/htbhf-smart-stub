@@ -35,9 +35,10 @@ public class PersonTestFactory {
 
     /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under one.
+     * Note, the same value is used to set the number of children under four as a child under one is also under four.
      */
     public static PersonDTO aPersonWithChildrenUnderOne(Integer numberOfChildren) {
-        final String nino = String.format("BA%d00000C", numberOfChildren);
+        final String nino = String.format("BA%d%d0000C", numberOfChildren, numberOfChildren);
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -50,11 +51,33 @@ public class PersonTestFactory {
     }
 
     /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under one and four.
+     */
+    public static PersonDTO aPersonWithChildren(Integer childrenUnderOne, Integer childrenUnderFour) {
+        final String nino = String.format("BA%d%d0000C", childrenUnderOne, childrenUnderFour);
+        return buildDefaultPerson().nino(nino).build();
+    }
+
+    /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person not found.
      */
     public static PersonDTO aPersonNotFound() {
         final String nino = "AA000000C";
         return buildDefaultPerson().nino(nino).build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with no nino.
+     */
+    public static PersonDTO aPersonWithNoNino() {
+        return buildDefaultPerson().nino(null).build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with an invalid nino.
+     */
+    public static PersonDTO aPersonWithAnInvalidNino() {
+        return buildDefaultPerson().nino("ab123").build();
     }
 
     private static PersonDTO.PersonDTOBuilder buildDefaultPerson() {

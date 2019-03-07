@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonNotFound;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnNoBenefitsAndNoChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnUniversalCreditWithNoChildren;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildrenUnderFour;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildrenUnderOne;
 
@@ -50,14 +51,14 @@ class BenefitsServiceTest {
     }
 
     @Test
-    void shouldReturnThreeChildrenUnderOnesForMatchingNino() {
+    void shouldReturnThreeChildrenUnderOneForMatchingNino() {
         var person = aPersonWithChildrenUnderOne(3);
 
         var benefit = benefitsService.getBenefits(person.getNino().toCharArray());
 
         assertThat(benefit.getBenefit()).isNull();
         assertThat(benefit.getNumberOfChildrenUnderOne()).isEqualTo(3);
-        assertThat(benefit.getNumberOfChildrenUnderFour()).isEqualTo(0);
+        assertThat(benefit.getNumberOfChildrenUnderFour()).isEqualTo(3);
     }
 
     @Test
@@ -65,6 +66,16 @@ class BenefitsServiceTest {
         var person = aPersonNotFound();
 
         assertThrows(PersonNotFoundException.class, () -> {
+            benefitsService.getBenefits(person.getNino().toCharArray());
+        });
+
+    }
+
+    @Test
+    void shouldThrowExceptionWhenChildrenUnderOneIsGreaterThanChildrenUnderFour() {
+        var person = aPersonWithChildren(4, 1);
+
+        assertThrows(IllegalArgumentException.class, () -> {
             benefitsService.getBenefits(person.getNino().toCharArray());
         });
 

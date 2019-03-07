@@ -8,6 +8,8 @@ import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 import uk.gov.dhsc.htbhf.smartstub.service.BenefitsService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/dwp/benefits/v1")
 public class DWPBenefitController {
@@ -19,7 +21,7 @@ public class DWPBenefitController {
     }
 
     @PostMapping
-    public BenefitDTO getBenefits(@RequestBody PersonDTO person) {
+    public BenefitDTO getBenefits(@RequestBody @Valid PersonDTO person) {
         return benefitsService.getBenefits(person.getNino().toCharArray());
     }
 }

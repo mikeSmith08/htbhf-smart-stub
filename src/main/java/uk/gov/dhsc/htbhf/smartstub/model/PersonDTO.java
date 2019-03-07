@@ -7,12 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Data
 @Builder
 @AllArgsConstructor(onConstructor_ = {@JsonCreator})
 public class PersonDTO {
 
+    @NotNull
+    @Pattern(regexp = "[a-zA-Z]{2}\\d{6}[a-dA-D]")
     @JsonProperty("nino")
     private final String nino;
 

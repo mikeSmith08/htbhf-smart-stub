@@ -14,6 +14,7 @@ import static uk.gov.dhsc.htbhf.smartstub.model.BenefitType.UNIVERSAL_CREDIT;
 @Service
 public class BenefitsService {
 
+    private static final String INVALID_CHILDREN_NUMBER = "Can not have more children under one than children four. Given values were %d, %d";
     private static final int PERSON_EXISTS_POSITION = 0;
     private static final int CHILDREN_UNDER_ONE_POSITION = 2;
     private static final int CHILDREN_UNDER_FOUR_POSITION = 3;
@@ -27,6 +28,10 @@ public class BenefitsService {
         var benefit = getBenefit(nino);
         var childrenUnderOne = getNumberOfChildrenUnderOne(nino);
         var childrenUnderFour = getNumberOfChildrenUnderFour(nino);
+
+        if(childrenUnderOne > childrenUnderFour) {
+            throw new IllegalArgumentException(String.format(INVALID_CHILDREN_NUMBER, childrenUnderOne, childrenUnderFour));
+        }
 
         return BenefitDTO.builder()
                 .benefit(benefit)
