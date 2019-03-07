@@ -61,7 +61,7 @@ class BenefitsServiceTest {
     }
 
     @Test
-    void shouldReturnNullForPersonNotFoundNino() {
+    void shouldThrowExceptionForPersonNotFoundNino() {
         var person = aPersonNotFound();
 
         assertThrows(PersonNotFoundException.class, () -> {
