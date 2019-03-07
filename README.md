@@ -12,8 +12,8 @@ The nino is encoded as follows:
   e.g. AB123456C will return 404 not found, 
      DB123456C will return a valid response.
     
-* The first numeric digit represents the number of children under one.
-  e.g BA200000C will return a valid response with two children under one.
+* The first numeric digit represents the number of children under one. (Note, this can not be greater than the number of children under four)
+  e.g BA220000C will return a valid response with two children under one.
   
 * The second numeric digit represents the number of children under four.
   e.g BA030000C will return a valid response with three children under four.
