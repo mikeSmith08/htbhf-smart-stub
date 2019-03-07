@@ -18,5 +18,5 @@ The nino is encoded as follows:
 * The second numeric digit represents the number of children under four.
   e.g BA030000C will return a valid response with three children under four.
   
-* The last character represents the benefits a person. 
+* The last character represents the benefits a person is receiving.
   'A' represents universal credit, 'B' represents Child Tax Credits and all other characters represent no benefit.

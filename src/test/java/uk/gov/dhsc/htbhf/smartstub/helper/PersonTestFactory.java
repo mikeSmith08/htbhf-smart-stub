@@ -40,6 +40,30 @@ public class PersonTestFactory {
                 .build();
     }
 
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under one.
+     */
+    public static PersonDTO aPersonWithChildrenUnderOne(Integer numberOfChildren) {
+        final String nino = String.format("BA%d00000C", numberOfChildren);
+        return PersonDTO.builder()
+                .dateOfBirth(DOB)
+                .nino(nino)
+                .address(aValidAddress())
+                .build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under four.
+     */
+    public static PersonDTO aPersonWithChildrenUnderFour(Integer numberOfChildren) {
+        final String nino = String.format("BA0%d0000C", numberOfChildren);
+        return PersonDTO.builder()
+                .dateOfBirth(DOB)
+                .nino(nino)
+                .address(aValidAddress())
+                .build();
+    }
+
     private static AddressDTO aValidAddress() {
         return AddressDTO.builder()
                 .addressLine1(ADDRESS_LINE_1)
