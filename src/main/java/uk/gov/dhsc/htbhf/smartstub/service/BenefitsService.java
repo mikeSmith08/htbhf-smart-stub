@@ -7,6 +7,10 @@ import uk.gov.dhsc.htbhf.smartstub.model.BenefitType;
 
 import static uk.gov.dhsc.htbhf.smartstub.model.BenefitType.UNIVERSAL_CREDIT;
 
+/**
+ * Service for creating a {@link BenefitDTO} response based on a given national insurance number (nino.
+ * See README.md for details on mappings.
+ */
 @Service
 public class BenefitsService {
 
@@ -16,7 +20,7 @@ public class BenefitsService {
     private static final int UNIVERSAL_CREDIT_POSITION = 8;
 
     public BenefitDTO getBenefits(char[] nino) {
-        if (userNotFound(nino)) {
+        if (personNotFound(nino)) {
             throw new PersonNotFoundException();
         }
 
@@ -31,7 +35,7 @@ public class BenefitsService {
                 .build();
     }
 
-    private boolean userNotFound(char[] nino) {
+    private boolean personNotFound(char[] nino) {
         return nino[PERSON_EXISTS_POSITION] == 'A';
     }
 

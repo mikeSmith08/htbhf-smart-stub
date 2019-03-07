@@ -15,17 +15,14 @@ public class PersonTestFactory {
     private static final String ADDRESS_LINE_2 = "123 Fake street";
     private static final String TOWN_OR_CITY = "Springfield";
     private static final String POSTCODE = "AA1 1AA";
+    private static final String NINO = "AB123456C";
 
     /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person with no benefits or children.
      */
     public static PersonDTO aPersonOnNoBenefitsAndNoChildren() {
         final String nino = "BA000000C";
-        return PersonDTO.builder()
-                .dateOfBirth(DOB)
-                .nino(nino)
-                .address(aValidAddress())
-                .build();
+        return buildDefaultPerson().nino(nino).build();
     }
 
     /**
@@ -33,11 +30,7 @@ public class PersonTestFactory {
      */
     public static PersonDTO aPersonOnUniversalCreditWithNoChildren() {
         final String nino = "BA000000A";
-        return PersonDTO.builder()
-                .dateOfBirth(DOB)
-                .nino(nino)
-                .address(aValidAddress())
-                .build();
+        return buildDefaultPerson().nino(nino).build();
     }
 
     /**
@@ -45,11 +38,7 @@ public class PersonTestFactory {
      */
     public static PersonDTO aPersonWithChildrenUnderOne(Integer numberOfChildren) {
         final String nino = String.format("BA%d00000C", numberOfChildren);
-        return PersonDTO.builder()
-                .dateOfBirth(DOB)
-                .nino(nino)
-                .address(aValidAddress())
-                .build();
+        return buildDefaultPerson().nino(nino).build();
     }
 
     /**
@@ -57,11 +46,7 @@ public class PersonTestFactory {
      */
     public static PersonDTO aPersonWithChildrenUnderFour(Integer numberOfChildren) {
         final String nino = String.format("BA0%d0000C", numberOfChildren);
-        return PersonDTO.builder()
-                .dateOfBirth(DOB)
-                .nino(nino)
-                .address(aValidAddress())
-                .build();
+        return buildDefaultPerson().nino(nino).build();
     }
 
     /**
@@ -69,11 +54,14 @@ public class PersonTestFactory {
      */
     public static PersonDTO aPersonNotFound() {
         final String nino = "AA000000C";
+        return buildDefaultPerson().nino(nino).build();
+    }
+
+    private static PersonDTO.PersonDTOBuilder buildDefaultPerson() {
         return PersonDTO.builder()
                 .dateOfBirth(DOB)
-                .nino(nino)
-                .address(aValidAddress())
-                .build();
+                .nino(NINO)
+                .address(aValidAddress());
     }
 
     private static AddressDTO aValidAddress() {
