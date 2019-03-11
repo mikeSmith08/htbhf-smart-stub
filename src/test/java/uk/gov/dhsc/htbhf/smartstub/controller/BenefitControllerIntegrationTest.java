@@ -5,59 +5,57 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
-import uk.gov.dhsc.htbhf.smartstub.model.BenefitType;
+import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonNotFound;
-import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnNoBenefitsAndNoChildren;
-import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonOnUniversalCreditWithNoChildren;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoIsEligible;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoIsIneligible;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoIsPending;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithAnInvalidNino;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildrenUnderFour;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildrenUnderOne;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithNoAddress;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithNoDateOfBirth;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithNoNino;
+import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.ELIGIBLE;
+import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.INELIGIBLE;
+import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.NOMATCH;
+import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BenefitControllerIntegrationTest {
 
-    private static final URI ENDPOINT = URI.create("/dwp/benefits/v1");
+    private static final URI ENDPOINT = URI.create("/v1/dwp/benefits");
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
-    void shouldReturnNoBenefitsAndNoChildrenForMatchingNino() {
-        var person = aPersonOnNoBenefitsAndNoChildren();
+    void shouldReturnNoChildrenForMatchingNino() {
+        var person = aPersonWhoIsIneligible();
 
         var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
 
-        assertThat(benefit.getStatusCode()).isEqualTo(OK);
-        assertThat(benefit.getBody()).isNotNull();
-        assertThat(benefit.getBody().getBenefit()).isNull();
-        assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isEqualTo(0);
-        assertThat(benefit.getBody().getNumberOfChildrenUnderFour()).isEqualTo(0);
+        assertNumberOfChildrenResponse(benefit, 0, 0);
     }
 
     @Test
-    void shouldReturnUniversalCreditForMatchingNino() {
-        var person = aPersonOnUniversalCreditWithNoChildren();
+    void shouldReturnTwoChildrenUnderOneForMatchingNino() {
+        var person = aPersonWithChildrenUnderOne(2);
 
         var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
 
-        assertThat(benefit.getStatusCode()).isEqualTo(OK);
-        assertThat(benefit.getBody()).isNotNull();
-        assertThat(benefit.getBody().getBenefit()).isEqualTo(BenefitType.UNIVERSAL_CREDIT);
-        assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isEqualTo(0);
-        assertThat(benefit.getBody().getNumberOfChildrenUnderFour()).isEqualTo(0);
+        assertNumberOfChildrenResponse(benefit, 2, 2);
     }
 
     @Test
@@ -66,19 +64,45 @@ class BenefitControllerIntegrationTest {
 
         var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
 
-        assertThat(benefit.getStatusCode()).isEqualTo(OK);
-        assertThat(benefit.getBody()).isNotNull();
-        assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isEqualTo(0);
-        assertThat(benefit.getBody().getNumberOfChildrenUnderFour()).isEqualTo(2);
+        assertNumberOfChildrenResponse(benefit, 0, 2);
     }
 
     @Test
-    void shouldReturnNotFoundResponseForMatchingNino() {
+    void shouldReturnNoMatchForMatchingNino() {
         var person = aPersonNotFound();
 
         var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
 
-        assertThat(benefit.getStatusCode()).isEqualTo(NOT_FOUND);
+        assertStatusResponse(benefit, NOMATCH);
+        assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isNull();
+        assertThat(benefit.getBody().getNumberOfChildrenUnderFour()).isNull();
+    }
+
+    @Test
+    void shouldReturnIneligibleForMatchingNino() {
+        var person = aPersonWhoIsIneligible();
+
+        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+
+        assertStatusResponse(benefit, INELIGIBLE);
+    }
+
+    @Test
+    void shouldReturnEligibleForMatchingNino() {
+        var person = aPersonWhoIsEligible();
+
+        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+
+        assertStatusResponse(benefit, ELIGIBLE);
+    }
+
+    @Test
+    void shouldReturnPendingForMatchingNino() {
+        var person = aPersonWhoIsPending();
+
+        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+
+        assertStatusResponse(benefit, PENDING);
     }
 
     @Test
@@ -126,5 +150,18 @@ class BenefitControllerIntegrationTest {
         var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
+    }
+
+    private void assertStatusResponse(ResponseEntity<BenefitDTO> benefit, EligibilityStatus nomatch) {
+        assertThat(benefit.getStatusCode()).isEqualTo(OK);
+        assertThat(benefit.getBody()).isNotNull();
+        assertThat(benefit.getBody().getEligibilityStatus()).isEqualTo(nomatch);
+    }
+
+    private void assertNumberOfChildrenResponse(ResponseEntity<BenefitDTO> benefit, Integer childrenUnderOne, Integer childrenUnderFour) {
+        assertThat(benefit.getStatusCode()).isEqualTo(OK);
+        assertThat(benefit.getBody()).isNotNull();
+        assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isEqualTo(childrenUnderOne);
+        assertThat(benefit.getBody().getNumberOfChildrenUnderFour()).isEqualTo(childrenUnderFour);
     }
 }

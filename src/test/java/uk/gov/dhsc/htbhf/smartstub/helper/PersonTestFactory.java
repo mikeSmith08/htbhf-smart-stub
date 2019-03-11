@@ -3,6 +3,7 @@ package uk.gov.dhsc.htbhf.smartstub.helper;
 import uk.gov.dhsc.htbhf.smartstub.model.AddressDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -15,21 +16,34 @@ public class PersonTestFactory {
     private static final String ADDRESS_LINE_2 = "123 Fake street";
     private static final String TOWN_OR_CITY = "Springfield";
     private static final String POSTCODE = "AA1 1AA";
-    private static final String NINO = "AB123456C";
+    private static final String NINO = "EB123456C";
+    private static final String FORENAME = "Lisa";
+    private static final String SURNAME = "Simpson";
+    private static final LocalDate ELIGIBLE_END_DATE = LocalDate.parse("2019-03-01");
+    private static final LocalDate ELIGIBLE_START_DATE = LocalDate.parse("2019-02-14");
+    private static final BigDecimal UC_MONTHLY_INCOME_THRESHOLD = BigDecimal.valueOf(408);
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person with no benefits or children.
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is ineligible.
      */
-    public static PersonDTO aPersonOnNoBenefitsAndNoChildren() {
-        final String nino = "BA000000C";
+    public static PersonDTO aPersonWhoIsIneligible() {
+        final String nino = "IA000000C";
         return buildDefaultPerson().nino(nino).build();
     }
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person with on universal credit with no children.
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is eligible.
      */
-    public static PersonDTO aPersonOnUniversalCreditWithNoChildren() {
-        final String nino = "BA000000A";
+    public static PersonDTO aPersonWhoIsEligible() {
+        final String nino = "EA000000C";
+        return buildDefaultPerson().nino(nino).build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending.
+     */
+    public static PersonDTO aPersonWhoIsPending() {
+        final String nino = "PA000000C";
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -38,7 +52,7 @@ public class PersonTestFactory {
      * Note, the same value is used to set the number of children under four as a child under one is also under four.
      */
     public static PersonDTO aPersonWithChildrenUnderOne(Integer numberOfChildren) {
-        final String nino = String.format("BA%d%d0000C", numberOfChildren, numberOfChildren);
+        final String nino = String.format("EA%d%d0000C", numberOfChildren, numberOfChildren);
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -46,7 +60,7 @@ public class PersonTestFactory {
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under four.
      */
     public static PersonDTO aPersonWithChildrenUnderFour(Integer numberOfChildren) {
-        final String nino = String.format("BA0%d0000C", numberOfChildren);
+        final String nino = String.format("EA0%d0000C", numberOfChildren);
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -54,7 +68,7 @@ public class PersonTestFactory {
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under one and four.
      */
     public static PersonDTO aPersonWithChildren(Integer childrenUnderOne, Integer childrenUnderFour) {
-        final String nino = String.format("BA%d%d0000C", childrenUnderOne, childrenUnderFour);
+        final String nino = String.format("EA%d%d0000C", childrenUnderOne, childrenUnderFour);
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -62,7 +76,7 @@ public class PersonTestFactory {
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person not found.
      */
     public static PersonDTO aPersonNotFound() {
-        final String nino = "AA000000C";
+        final String nino = "DA000000C";
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -98,7 +112,12 @@ public class PersonTestFactory {
         return PersonDTO.builder()
                 .dateOfBirth(DOB)
                 .nino(NINO)
-                .address(aValidAddress());
+                .address(aValidAddress())
+                .forename(FORENAME)
+                .surname(SURNAME)
+                .eligibleStartDate(ELIGIBLE_START_DATE)
+                .eligibleEndDate(ELIGIBLE_END_DATE)
+                .ucMonthlyIncomeThreshold(UC_MONTHLY_INCOME_THRESHOLD);
     }
 
     private static AddressDTO aValidAddress() {
