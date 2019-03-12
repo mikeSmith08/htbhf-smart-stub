@@ -16,6 +16,7 @@ check_variable_is_set(){
 
 check_variable_is_set APP_NAME
 check_variable_is_set BIN_DIR
+check_variable_is_set GH_WRITE_TOKEN
 
 # download the deployment script(s)
 echo "Installing deploy scripts"
@@ -23,7 +24,7 @@ mkdir -p ${BIN_DIR}
 rm -rf ${BIN_DIR}/deployment-scripts
 mkdir ${BIN_DIR}/deployment-scripts
 
-curl -s https://api.github.com/repos/DepartmentOfHealth-htbhf/htbhf-deployment-scripts/releases/latest \
+curl -H "Authorization: token ${GH_WRITE_TOKEN}" -s https://api.github.com/repos/DepartmentOfHealth-htbhf/htbhf-deployment-scripts/releases/latest \
 | grep zipball_url \
 | cut -d'"' -f4 \
 | wget -qO deployment-scripts.zip -i -
