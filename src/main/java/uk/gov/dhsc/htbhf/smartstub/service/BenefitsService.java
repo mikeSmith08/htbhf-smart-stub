@@ -1,11 +1,15 @@
 package uk.gov.dhsc.htbhf.smartstub.service;
 
 import org.springframework.stereotype.Service;
-import uk.gov.dhsc.htbhf.smartstub.exception.PersonNotFoundException;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
-import uk.gov.dhsc.htbhf.smartstub.model.BenefitType;
+import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
 
-import static uk.gov.dhsc.htbhf.smartstub.model.BenefitType.UNIVERSAL_CREDIT;
+import java.util.Map;
+
+import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.ELIGIBLE;
+import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.INELIGIBLE;
+import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.NOMATCH;
+import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
 
 /**
  * Service for creating a {@link BenefitDTO} response based on a given national insurance number (nino.
@@ -15,17 +19,17 @@ import static uk.gov.dhsc.htbhf.smartstub.model.BenefitType.UNIVERSAL_CREDIT;
 public class BenefitsService {
 
     private static final String INVALID_CHILDREN_NUMBER = "Can not have more children under one than children four. Given values were %d, %d";
-    private static final int PERSON_EXISTS_POSITION = 0;
+    private static final int ELIGIBILITY_STATUS_POSITION = 0;
     private static final int CHILDREN_UNDER_ONE_POSITION = 2;
     private static final int CHILDREN_UNDER_FOUR_POSITION = 3;
-    private static final int UNIVERSAL_CREDIT_POSITION = 8;
+    private static final Map<Character, EligibilityStatus> ELIGIBILITY_STATUS_MAP = Map.of('E', ELIGIBLE, 'I', INELIGIBLE, 'P', PENDING);
 
     public BenefitDTO getBenefits(char[] nino) {
-        if (personNotFound(nino)) {
-            throw new PersonNotFoundException();
+        var status = ELIGIBILITY_STATUS_MAP.getOrDefault(nino[ELIGIBILITY_STATUS_POSITION], NOMATCH);
+        if (status == NOMATCH) {
+            return BenefitDTO.builder().eligibilityStatus(NOMATCH).build();
         }
 
-        var benefit = getBenefit(nino);
         var childrenUnderOne = getNumberOfChildrenUnderOne(nino);
         var childrenUnderFour = getNumberOfChildrenUnderFour(nino);
 
@@ -34,14 +38,10 @@ public class BenefitsService {
         }
 
         return BenefitDTO.builder()
-                .benefit(benefit)
+                .eligibilityStatus(status)
                 .numberOfChildrenUnderOne(childrenUnderOne)
                 .numberOfChildrenUnderFour(childrenUnderFour)
                 .build();
-    }
-
-    private boolean personNotFound(char[] nino) {
-        return nino[PERSON_EXISTS_POSITION] == 'A';
     }
 
     private Integer getNumberOfChildrenUnderOne(char[] nino) {
@@ -50,10 +50,5 @@ public class BenefitsService {
 
     private Integer getNumberOfChildrenUnderFour(char[] nino) {
         return Character.getNumericValue(nino[CHILDREN_UNDER_FOUR_POSITION]);
-    }
-
-    private BenefitType getBenefit(char[] nino) {
-        var universalCredit = nino[UNIVERSAL_CREDIT_POSITION] == 'A';
-        return universalCredit ? UNIVERSAL_CREDIT : null;
     }
 }

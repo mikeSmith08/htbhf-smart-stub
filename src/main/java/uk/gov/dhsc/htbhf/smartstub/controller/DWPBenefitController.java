@@ -11,7 +11,7 @@ import uk.gov.dhsc.htbhf.smartstub.service.BenefitsService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/dwp/benefits/v1")
+@RequestMapping("/v1/dwp/benefits")
 public class DWPBenefitController {
 
     private BenefitsService benefitsService;
