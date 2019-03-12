@@ -18,10 +18,9 @@ branches:
   except:
   - /^v\d/
 
-#Build and perform release (if needed)
-# note that we can't restart failed builds in Travis as the shipkit publishing step will fail if it has already run for that version. Must create a new commit.
+#Build and deploy
 script:
-- ./gradlew clean build
+- ./gradlew clean build && ./ci_scripts/ci_deploy.sh
 
 env:
   global:
