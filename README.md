@@ -20,3 +20,6 @@ The nino is encoded as follows:
   
 * The second numeric digit represents the number of children under four.
   e.g EA030000C will return a valid response with three children under four.
+
+## postman collection
+Use https://www.getpostman.com/collections/b1e8a55b936abd3879e3 to import a postman collection with api examples.
