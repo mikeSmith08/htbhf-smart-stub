@@ -22,3 +22,10 @@ branches:
 # note that we can't restart failed builds in Travis as the shipkit publishing step will fail if it has already run for that version. Must create a new commit.
 script:
 - ./gradlew clean build
+
+env:
+  global:
+    - APP_NAME=htbhf-smart-stub
+    - CF_DOMAIN=apps.internal
+    - SMOKE_TESTS=./ci_scripts/smoke_tests.sh
+    - BIN_DIR=./bin

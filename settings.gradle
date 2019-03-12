@@ -3,4 +3,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = 'smart-stub'
+rootProject.name = 'htbhf-smart-stub'
