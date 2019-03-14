@@ -1,17 +1,19 @@
 package uk.gov.dhsc.htbhf.smartstub.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
-import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
+import uk.gov.dhsc.htbhf.smartstub.model.EligibilityRequest;
 import uk.gov.dhsc.htbhf.smartstub.service.BenefitsService;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/dwp/benefits")
+@Slf4j
 public class DWPBenefitController {
 
     private BenefitsService benefitsService;
@@ -21,7 +23,8 @@ public class DWPBenefitController {
     }
 
     @PostMapping
-    public BenefitDTO getBenefits(@RequestBody @Valid PersonDTO person) {
-        return benefitsService.getBenefits(person.getNino().toCharArray());
+    public BenefitDTO getBenefits(@RequestBody @Valid EligibilityRequest eligibilityRequest) {
+        log.debug("Received eligibility request");
+        return benefitsService.getBenefits(eligibilityRequest.getPerson().getNino().toCharArray());
     }
 }

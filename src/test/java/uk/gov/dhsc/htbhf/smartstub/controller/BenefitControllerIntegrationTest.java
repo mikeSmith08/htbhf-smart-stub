@@ -9,12 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
+import uk.gov.dhsc.htbhf.smartstub.model.EligibilityRequest;
+import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
+import static uk.gov.dhsc.htbhf.smartstub.helper.EligibilityRequestTestDataFactory.anEligibilityRequest;
+import static uk.gov.dhsc.htbhf.smartstub.helper.EligibilityRequestTestDataFactory.anEligibilityRequestWithPerson;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonNotFound;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoIsEligible;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoIsIneligible;
@@ -42,9 +46,9 @@ class BenefitControllerIntegrationTest {
 
     @Test
     void shouldReturnNoChildrenForMatchingNino() {
-        var person = aPersonWhoIsIneligible();
+        EligibilityRequest anEligibilityRequest = anEligibilityRequest();
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, anEligibilityRequest, BenefitDTO.class);
 
         assertNumberOfChildrenResponse(benefit, 0, 0);
     }
@@ -60,18 +64,20 @@ class BenefitControllerIntegrationTest {
 
     @Test
     void shouldReturnTwoChildrenUnderFourForMatchingNino() {
-        var person = aPersonWithChildrenUnderFour(2);
+        PersonDTO person = aPersonWithChildrenUnderFour(2);
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertNumberOfChildrenResponse(benefit, 0, 2);
     }
 
     @Test
     void shouldReturnNoMatchForMatchingNino() {
-        var person = aPersonNotFound();
+        PersonDTO person = aPersonNotFound();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertStatusResponse(benefit, NOMATCH);
         assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isNull();
@@ -80,54 +86,60 @@ class BenefitControllerIntegrationTest {
 
     @Test
     void shouldReturnIneligibleForMatchingNino() {
-        var person = aPersonWhoIsIneligible();
+        PersonDTO person = aPersonWhoIsIneligible();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertStatusResponse(benefit, INELIGIBLE);
     }
 
     @Test
     void shouldReturnEligibleForMatchingNino() {
-        var person = aPersonWhoIsEligible();
+        PersonDTO person = aPersonWhoIsEligible();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertStatusResponse(benefit, ELIGIBLE);
     }
 
     @Test
     void shouldReturnPendingForMatchingNino() {
-        var person = aPersonWhoIsPending();
+        PersonDTO person = aPersonWhoIsPending();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertStatusResponse(benefit, PENDING);
     }
 
     @Test
     void shouldReturnBadRequestForMissingNino() {
-        var person = aPersonWithNoNino();
+        PersonDTO person = aPersonWithNoNino();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 
     @Test
     void shouldReturnBadRequestForInvalidNino() {
-        var person = aPersonWithAnInvalidNino();
+        PersonDTO person = aPersonWithAnInvalidNino();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 
     @Test
     void shouldReturnBadRequestWhenChildrenUnderOneIsGreaterThanChildrenFour() {
-        var person = aPersonWithChildren(3, 1);
+        PersonDTO person = aPersonWithChildren(3, 1);
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, ErrorResponse.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, ErrorResponse.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
         assertThat(benefit.getBody()).isNotNull();
@@ -136,18 +148,20 @@ class BenefitControllerIntegrationTest {
 
     @Test
     void shouldReturnBadRequestForMissingDateOfBirth() {
-        var person = aPersonWithNoDateOfBirth();
+        PersonDTO person = aPersonWithNoDateOfBirth();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 
     @Test
     void shouldReturnBadRequestForMissingAddress() {
-        var person = aPersonWithNoAddress();
+        PersonDTO person = aPersonWithNoAddress();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
