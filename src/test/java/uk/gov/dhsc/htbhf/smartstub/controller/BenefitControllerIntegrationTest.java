@@ -56,8 +56,9 @@ class BenefitControllerIntegrationTest {
     @Test
     void shouldReturnTwoChildrenUnderOneForMatchingNino() {
         var person = aPersonWithChildrenUnderOne(2);
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, person, BenefitDTO.class);
+        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertNumberOfChildrenResponse(benefit, 2, 2);
     }
