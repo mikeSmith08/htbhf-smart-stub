@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -38,16 +37,4 @@ public class PersonDTO {
     @NotNull
     @JsonProperty("address")
     private final AddressDTO address;
-
-    @NotNull
-    @JsonProperty("ucMonthlyIncomeThreshold")
-    private final BigDecimal ucMonthlyIncomeThreshold;
-
-    @NotNull
-    @JsonProperty("eligibleStartDate")
-    private final LocalDate eligibleStartDate;
-
-    @NotNull
-    @JsonProperty("eligibleEndDate")
-    private final LocalDate eligibleEndDate;
 }

@@ -19,9 +19,6 @@ public class PersonTestFactory {
     private static final String NINO = "EB123456C";
     private static final String FORENAME = "Lisa";
     private static final String SURNAME = "Simpson";
-    private static final LocalDate ELIGIBLE_END_DATE = LocalDate.parse("2019-03-01");
-    private static final LocalDate ELIGIBLE_START_DATE = LocalDate.parse("2019-02-14");
-    private static final BigDecimal UC_MONTHLY_INCOME_THRESHOLD = BigDecimal.valueOf(408);
 
     /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is ineligible.
@@ -114,10 +111,7 @@ public class PersonTestFactory {
                 .nino(NINO)
                 .address(aValidAddress())
                 .forename(FORENAME)
-                .surname(SURNAME)
-                .eligibleStartDate(ELIGIBLE_START_DATE)
-                .eligibleEndDate(ELIGIBLE_END_DATE)
-                .ucMonthlyIncomeThreshold(UC_MONTHLY_INCOME_THRESHOLD);
+                .surname(SURNAME);
     }
 
     private static AddressDTO aValidAddress() {
