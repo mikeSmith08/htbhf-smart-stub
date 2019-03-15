@@ -7,3 +7,6 @@ logging:
   level:
     ROOT: ${vcap.services.variable-service.credentials.dwp-api-app-root-loglevel:info}
     uk.gov.dhsc: ${vcap.services.variable-service.credentials.dwp-api-app-loglevel:debug}
+
+server:
+  port: 8120
