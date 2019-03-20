@@ -9,3 +9,6 @@ applications:
     - route: htbhf-smart-stub((app-suffix)).apps.internal
   env:
     JBP_CONFIG_OPEN_JDK_JRE: '{jre: { version: 11.+ }}'
+  services:
+    - logit-ssl-drain
+    - variable-service
