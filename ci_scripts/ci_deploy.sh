@@ -17,6 +17,9 @@ check_variable_is_set(){
 check_variable_is_set APP_NAME
 check_variable_is_set BIN_DIR
 check_variable_is_set GH_WRITE_TOKEN
+check_variable_is_set CF_PUBLIC_DOMAIN
+check_variable_is_set DEVELOPMENT_HOSTNAME
+check_variable_is_set STAGING_HOSTNAME
 
 # download the deployment script(s)
 echo "Installing deploy scripts"
@@ -43,15 +46,17 @@ export APP_PATH="build/libs/$APP_NAME-$APP_VERSION.jar"
 # deploy to development and staging
 export CF_SPACE=development
 /bin/bash ${SCRIPT_DIR}/deploy.sh
+cf map-route ${APP_NAME}-${CF_SPACE} ${CF_PUBLIC_DOMAIN} ${DEVELOPMENT_HOSTNAME}
 
 RESULT=$?
 
 if [[ ${RESULT} != 0 ]]; then
   echo "# Deployment to development failed, skipping deployment to staging"
   echo "# See deployment logs below"
-  cf logs ${APP_FULL_NAME} --recent
+  cf logs ${APP_NAME}-${CF_SPACE} --recent
   exit 1
 fi
 
 export CF_SPACE=staging
 /bin/bash ${SCRIPT_DIR}/deploy.sh
+cf map-route ${APP_NAME}-${CF_SPACE} ${CF_PUBLIC_DOMAIN} ${STAGING_HOSTNAME}
