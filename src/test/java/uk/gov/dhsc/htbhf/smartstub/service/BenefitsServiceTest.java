@@ -18,7 +18,7 @@ import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
 
 class BenefitsServiceTest {
 
-    private BenefitsService benefitsService = new BenefitsService();
+    private BenefitsService benefitsService = new BenefitsService(new IdentifierService());
 
     @Test
     void shouldReturnIneligibleForMatchingNino() {
