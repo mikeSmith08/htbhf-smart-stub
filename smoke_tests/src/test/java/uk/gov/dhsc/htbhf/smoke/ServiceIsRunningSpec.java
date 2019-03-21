@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.OK;
 @ExtendWith(SpringExtension.class)
 class ServiceIsRunningSpec {
 
-    private static final String BASE_URL = System.getProperty("base_url") == null ? "http://localhost:8080" : System.getProperty("base_url");
+    private static final String BASE_URL = System.getProperty("base_url") == null ? "http://localhost:8100" : System.getProperty("base_url");
     private static final String PROTOCOL = BASE_URL.startsWith("http") ? "" : "https://";
     private static final URI HEALTH_URI = URI.create(PROTOCOL + BASE_URL + "/actuator/health");
 

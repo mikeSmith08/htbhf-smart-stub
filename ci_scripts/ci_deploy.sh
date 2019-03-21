@@ -47,7 +47,7 @@ export APP_PATH="build/libs/$APP_NAME-$APP_VERSION.jar"
 # deploy to development and staging
 export CF_SPACE=development
 /bin/bash ${SCRIPT_DIR}/deploy.sh
-cf map-route ${APP_NAME}-${CF_SPACE} ${CF_PUBLIC_DOMAIN} ${DEVELOPMENT_HOSTNAME}
+cf map-route "${APP_NAME}-${CF_SPACE}" ${CF_PUBLIC_DOMAIN} --hostname ${DEVELOPMENT_HOSTNAME}
 
 RESULT=$?
 
@@ -60,4 +60,4 @@ fi
 
 export CF_SPACE=staging
 /bin/bash ${SCRIPT_DIR}/deploy.sh
-cf map-route ${APP_NAME}-${CF_SPACE} ${CF_PUBLIC_DOMAIN} ${STAGING_HOSTNAME}
+cf map-route "${APP_NAME}-${CF_SPACE}" ${CF_PUBLIC_DOMAIN} --hostname ${STAGING_HOSTNAME}
