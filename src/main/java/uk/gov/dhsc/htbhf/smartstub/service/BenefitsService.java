@@ -1,5 +1,6 @@
 package uk.gov.dhsc.htbhf.smartstub.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
@@ -16,6 +17,7 @@ import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
  * See README.md for details on mappings.
  */
 @Service
+@AllArgsConstructor
 public class BenefitsService {
 
     private static final String INVALID_CHILDREN_NUMBER = "Can not have more children under one than children four. Given values were %d, %d";
@@ -23,6 +25,8 @@ public class BenefitsService {
     private static final int CHILDREN_UNDER_ONE_POSITION = 2;
     private static final int CHILDREN_UNDER_FOUR_POSITION = 3;
     private static final Map<Character, EligibilityStatus> ELIGIBILITY_STATUS_MAP = Map.of('E', ELIGIBLE, 'I', INELIGIBLE, 'P', PENDING);
+
+    private final IdentifierService identifierService;
 
     public BenefitDTO getBenefits(char[] nino) {
         var status = ELIGIBILITY_STATUS_MAP.getOrDefault(nino[ELIGIBILITY_STATUS_POSITION], NOMATCH);
@@ -37,10 +41,13 @@ public class BenefitsService {
             throw new IllegalArgumentException(String.format(INVALID_CHILDREN_NUMBER, childrenUnderOne, childrenUnderFour));
         }
 
+        String householdIdentifier = identifierService.getHouseholdIdentifier(new String(nino));
+
         return BenefitDTO.builder()
                 .eligibilityStatus(status)
                 .numberOfChildrenUnderOne(childrenUnderOne)
                 .numberOfChildrenUnderFour(childrenUnderFour)
+                .householdIdentifier(householdIdentifier)
                 .build();
     }
 

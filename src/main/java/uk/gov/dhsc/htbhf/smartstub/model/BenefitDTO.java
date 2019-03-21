@@ -23,5 +23,5 @@ public class BenefitDTO {
     private final Integer numberOfChildrenUnderFour;
 
     @JsonProperty("householdIdentifier")
-    private final String householdIdentifier = UUID.randomUUID().toString();
+    private final String householdIdentifier;
 }
