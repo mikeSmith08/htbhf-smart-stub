@@ -25,7 +25,7 @@ public class DWPBenefitController {
     @PostMapping
     public BenefitDTO getBenefits(@RequestBody @Valid EligibilityRequest eligibilityRequest) {
         log.debug("Received eligibility request {}", eligibilityRequest);
-        BenefitDTO benefits = benefitsService.getBenefits(eligibilityRequest.getPerson().getNino().toCharArray());
+        BenefitDTO benefits = benefitsService.getBenefits(eligibilityRequest.getPerson().getNino());
         log.debug("Sending response {}", benefits);
         return benefits;
     }

@@ -7,15 +7,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.dhsc.htbhf.errorhandler.ErrorResponse;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
-import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
 import uk.gov.dhsc.htbhf.smartstub.model.EligibilityRequest;
+import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
 import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static uk.gov.dhsc.htbhf.smartstub.helper.EligibilityRequestTestDataFactory.anEligibilityRequest;
 import static uk.gov.dhsc.htbhf.smartstub.helper.EligibilityRequestTestDataFactory.anEligibilityRequestWithPerson;
@@ -23,6 +25,7 @@ import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonNotFou
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoIsEligible;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoIsIneligible;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoIsPending;
+import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWhoWillTriggerAnError;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithAnInvalidNino;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.aPersonWithChildrenUnderFour;
@@ -48,7 +51,7 @@ class BenefitControllerIntegrationTest {
     void shouldReturnNoChildrenForMatchingNino() {
         EligibilityRequest anEligibilityRequest = anEligibilityRequest();
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, anEligibilityRequest, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, anEligibilityRequest, BenefitDTO.class);
 
         assertNumberOfChildrenResponse(benefit, 0, 0);
     }
@@ -58,7 +61,7 @@ class BenefitControllerIntegrationTest {
         var person = aPersonWithChildrenUnderOne(2);
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertNumberOfChildrenResponse(benefit, 2, 2);
     }
@@ -68,7 +71,7 @@ class BenefitControllerIntegrationTest {
         PersonDTO person = aPersonWithChildrenUnderFour(2);
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertNumberOfChildrenResponse(benefit, 0, 2);
     }
@@ -78,7 +81,7 @@ class BenefitControllerIntegrationTest {
         PersonDTO person = aPersonNotFound();
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertStatusResponse(benefit, NOMATCH);
         assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isNull();
@@ -86,11 +89,21 @@ class BenefitControllerIntegrationTest {
     }
 
     @Test
+    void shouldReturnSameChildrenUnder1AndChilderUnder4WhenChildrenUnder1TooHigh() {
+        PersonDTO person = aPersonWithChildren(3, 1);
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
+
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+
+        assertNumberOfChildrenResponse(benefit, 1, 1);
+    }
+
+    @Test
     void shouldReturnIneligibleForMatchingNino() {
         PersonDTO person = aPersonWhoIsIneligible();
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertStatusResponse(benefit, INELIGIBLE);
     }
@@ -100,7 +113,7 @@ class BenefitControllerIntegrationTest {
         PersonDTO person = aPersonWhoIsEligible();
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertStatusResponse(benefit, ELIGIBLE);
     }
@@ -110,7 +123,7 @@ class BenefitControllerIntegrationTest {
         PersonDTO person = aPersonWhoIsPending();
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertStatusResponse(benefit, PENDING);
     }
@@ -120,7 +133,7 @@ class BenefitControllerIntegrationTest {
         PersonDTO person = aPersonWithNoNino();
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
@@ -130,21 +143,9 @@ class BenefitControllerIntegrationTest {
         PersonDTO person = aPersonWithAnInvalidNino();
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
-    }
-
-    @Test
-    void shouldReturnBadRequestWhenChildrenUnderOneIsGreaterThanChildrenFour() {
-        PersonDTO person = aPersonWithChildren(3, 1);
-        EligibilityRequest request = anEligibilityRequestWithPerson(person);
-
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, ErrorResponse.class);
-
-        assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
-        assertThat(benefit.getBody()).isNotNull();
-        assertThat(benefit.getBody().getMessage()).isEqualTo("Can not have more children under one than children four. Given values were 3, 1");
     }
 
     @Test
@@ -152,7 +153,7 @@ class BenefitControllerIntegrationTest {
         PersonDTO person = aPersonWithNoDateOfBirth();
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
@@ -162,9 +163,20 @@ class BenefitControllerIntegrationTest {
         PersonDTO person = aPersonWithNoAddress();
         EligibilityRequest request = anEligibilityRequestWithPerson(person);
 
-        var benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
+        ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
         assertThat(benefit.getStatusCode()).isEqualTo(BAD_REQUEST);
+    }
+
+    @Test
+    void shouldReturnServiceUnavailableForExceptionalNino() {
+        PersonDTO person = aPersonWhoWillTriggerAnError();
+        EligibilityRequest request = anEligibilityRequestWithPerson(person);
+
+        ResponseEntity<ErrorResponse> error = restTemplate.postForEntity(ENDPOINT, request, ErrorResponse.class);
+
+        assertThat(error.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);
+        assertThat(error.getBody().getMessage()).isEqualTo("An internal server error occurred");
     }
 
     private void assertStatusResponse(ResponseEntity<BenefitDTO> benefit, EligibilityStatus nomatch) {
