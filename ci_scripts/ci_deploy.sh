@@ -38,6 +38,7 @@ rm -rf DepartmentOfHealth-htbhf-htbhf-deployment-scripts-*
 rm deployment-scripts.zip
 
 export SCRIPT_DIR=${BIN_DIR}/deployment-scripts
+export PATH=$PATH:${SCRIPT_DIR}
 
 # determine APP_PATH
 export APP_VERSION=`cat version.properties | grep "version" | cut -d'=' -f2`
