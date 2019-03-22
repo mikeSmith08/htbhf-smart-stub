@@ -2,6 +2,7 @@ package uk.gov.dhsc.htbhf.smartstub.helper;
 
 import uk.gov.dhsc.htbhf.smartstub.model.AddressDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
+import uk.gov.dhsc.htbhf.smartstub.service.BenefitsService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,6 +35,13 @@ public class PersonTestFactory {
     public static PersonDTO aPersonWhoIsEligible() {
         final String nino = "EA000000C";
         return buildDefaultPerson().nino(nino).build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that will trigger an Exception from the service
+     */
+    public static PersonDTO aPersonWhoWillTriggerAnError() {
+        return buildDefaultPerson().nino(BenefitsService.EXCEPTIONAL_NINO).build();
     }
 
     /**

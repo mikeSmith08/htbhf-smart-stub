@@ -1,6 +1,7 @@
 package uk.gov.dhsc.htbhf.smartstub.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
@@ -18,9 +19,10 @@ import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class BenefitsService {
 
-    private static final String INVALID_CHILDREN_NUMBER = "Can not have more children under one than children four. Given values were %d, %d";
+    public static final String EXCEPTIONAL_NINO = "ZZ999999D";
     private static final int ELIGIBILITY_STATUS_POSITION = 0;
     private static final int CHILDREN_UNDER_ONE_POSITION = 2;
     private static final int CHILDREN_UNDER_FOUR_POSITION = 3;
@@ -28,20 +30,22 @@ public class BenefitsService {
 
     private final IdentifierService identifierService;
 
-    public BenefitDTO getBenefits(char[] nino) {
-        var status = ELIGIBILITY_STATUS_MAP.getOrDefault(nino[ELIGIBILITY_STATUS_POSITION], NOMATCH);
+    public BenefitDTO getBenefits(String nino) {
+        if(EXCEPTIONAL_NINO.equals(nino)) {
+            String message = "NINO provided (" + EXCEPTIONAL_NINO + ") has been configured to trigger an Exception";
+            log.info(message);
+            throw new IllegalArgumentException(message);
+        }
+        char[] ninoChars = nino.toCharArray();
+        var status = ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[ELIGIBILITY_STATUS_POSITION], NOMATCH);
         if (status == NOMATCH) {
             return BenefitDTO.builder().eligibilityStatus(NOMATCH).build();
         }
 
-        var childrenUnderOne = getNumberOfChildrenUnderOne(nino);
-        var childrenUnderFour = getNumberOfChildrenUnderFour(nino);
+        Integer childrenUnderFour = getNumberOfChildrenUnderFour(ninoChars);
+        Integer childrenUnderOne = getNumberOfChildrenUnderOne(childrenUnderFour, ninoChars);
 
-        if(childrenUnderOne > childrenUnderFour) {
-            throw new IllegalArgumentException(String.format(INVALID_CHILDREN_NUMBER, childrenUnderOne, childrenUnderFour));
-        }
-
-        String householdIdentifier = identifierService.getHouseholdIdentifier(new String(nino));
+        String householdIdentifier = identifierService.getHouseholdIdentifier(nino);
 
         return BenefitDTO.builder()
                 .eligibilityStatus(status)
@@ -51,8 +55,9 @@ public class BenefitsService {
                 .build();
     }
 
-    private Integer getNumberOfChildrenUnderOne(char[] nino) {
-        return Character.getNumericValue(nino[CHILDREN_UNDER_ONE_POSITION]);
+    private Integer getNumberOfChildrenUnderOne(Integer childrenUnderFour, char[] nino) {
+        Integer childrenUnderOne = Character.getNumericValue(nino[CHILDREN_UNDER_ONE_POSITION]);
+        return (childrenUnderOne > childrenUnderFour) ? childrenUnderFour : childrenUnderOne;
     }
 
     private Integer getNumberOfChildrenUnderFour(char[] nino) {
