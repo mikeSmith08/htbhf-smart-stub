@@ -32,14 +32,16 @@ public class BenefitsService {
     private final IdentifierService identifierService;
 
     public BenefitDTO getDWPBenefits(String nino) {
-        return getBenefits(nino, DWP_ELIGIBILITY_STATUS_POSITION);
+        String householdIdentifier = identifierService.getDWPHouseholdIdentifier(nino);
+        return getBenefits(nino, DWP_ELIGIBILITY_STATUS_POSITION, householdIdentifier);
     }
 
     public BenefitDTO getHMRCBenefits(String nino) {
-        return getBenefits(nino, HMRC_ELIGIBILITY_STATUS_POSITION);
+        String householdIdentifier = identifierService.getHMRCHouseholdIdentifier(nino);
+        return getBenefits(nino, HMRC_ELIGIBILITY_STATUS_POSITION, householdIdentifier);
     }
 
-    private BenefitDTO getBenefits(String nino, int eligibilityStatusPosition) {
+    private BenefitDTO getBenefits(String nino, int eligibilityStatusPosition, String householdIdentifier) {
         if (EXCEPTIONAL_NINO.equals(nino)) {
             String message = "NINO provided (" + EXCEPTIONAL_NINO + ") has been configured to trigger an Exception";
             log.info(message);
@@ -53,8 +55,6 @@ public class BenefitsService {
 
         Integer childrenUnderFour = getNumberOfChildrenUnderFour(ninoChars);
         Integer childrenUnderOne = getNumberOfChildrenUnderOne(childrenUnderFour, ninoChars);
-
-        String householdIdentifier = identifierService.getHouseholdIdentifier(nino);
 
         return BenefitDTO.builder()
                 .eligibilityStatus(status)
