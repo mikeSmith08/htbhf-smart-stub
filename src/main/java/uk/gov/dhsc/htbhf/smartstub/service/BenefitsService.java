@@ -14,7 +14,7 @@ import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.NOMATCH;
 import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
 
 /**
- * Service for creating a {@link BenefitDTO} response based on a given national insurance number (nino.
+ * Service for creating a {@link BenefitDTO} response based on a given national insurance number (nino).
  * See README.md for details on mappings.
  */
 @Service
@@ -23,21 +23,30 @@ import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
 public class BenefitsService {
 
     public static final String EXCEPTIONAL_NINO = "ZZ999999D";
-    private static final int ELIGIBILITY_STATUS_POSITION = 0;
+    private static final int DWP_ELIGIBILITY_STATUS_POSITION = 0;
+    private static final int HMRC_ELIGIBILITY_STATUS_POSITION = 1;
     private static final int CHILDREN_UNDER_ONE_POSITION = 2;
     private static final int CHILDREN_UNDER_FOUR_POSITION = 3;
     private static final Map<Character, EligibilityStatus> ELIGIBILITY_STATUS_MAP = Map.of('E', ELIGIBLE, 'I', INELIGIBLE, 'P', PENDING);
 
     private final IdentifierService identifierService;
 
-    public BenefitDTO getBenefits(String nino) {
-        if(EXCEPTIONAL_NINO.equals(nino)) {
+    public BenefitDTO getDWPBenefits(String nino) {
+        return getBenefits(nino, DWP_ELIGIBILITY_STATUS_POSITION);
+    }
+
+    public BenefitDTO getHMRCBenefits(String nino) {
+        return getBenefits(nino, HMRC_ELIGIBILITY_STATUS_POSITION);
+    }
+
+    private BenefitDTO getBenefits(String nino, int eligibilityStatusPosition) {
+        if (EXCEPTIONAL_NINO.equals(nino)) {
             String message = "NINO provided (" + EXCEPTIONAL_NINO + ") has been configured to trigger an Exception";
             log.info(message);
             throw new IllegalArgumentException(message);
         }
         char[] ninoChars = nino.toCharArray();
-        var status = ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[ELIGIBILITY_STATUS_POSITION], NOMATCH);
+        var status = ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[eligibilityStatusPosition], NOMATCH);
         if (status == NOMATCH) {
             return BenefitDTO.builder().eligibilityStatus(NOMATCH).build();
         }

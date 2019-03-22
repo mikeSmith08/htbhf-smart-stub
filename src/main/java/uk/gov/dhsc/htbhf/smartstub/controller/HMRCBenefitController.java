@@ -6,27 +6,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
-import uk.gov.dhsc.htbhf.smartstub.model.DWPEligibilityRequest;
+import uk.gov.dhsc.htbhf.smartstub.model.HMRCEligibilityRequest;
 import uk.gov.dhsc.htbhf.smartstub.service.BenefitsService;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/dwp/benefits")
+@RequestMapping("/v1/hmrc/benefits")
 @Slf4j
-public class DWPBenefitController {
+public class HMRCBenefitController {
 
     private BenefitsService benefitsService;
 
-    public DWPBenefitController(BenefitsService benefitsService) {
+    public HMRCBenefitController(BenefitsService benefitsService) {
         this.benefitsService = benefitsService;
     }
 
     @PostMapping
-    public BenefitDTO getBenefits(@RequestBody @Valid DWPEligibilityRequest eligibilityRequest) {
-        log.debug("Received DWP eligibility request {}", eligibilityRequest);
-        BenefitDTO benefits = benefitsService.getDWPBenefits(eligibilityRequest.getPerson().getNino());
-        log.debug("Sending DWP response {}", benefits);
+    public BenefitDTO getBenefits(@RequestBody @Valid HMRCEligibilityRequest eligibilityRequest) {
+        log.debug("Received HMRC eligibility request {}", eligibilityRequest);
+        BenefitDTO benefits = benefitsService.getHMRCBenefits(eligibilityRequest.getPerson().getNino());
+        log.debug("Sending HRMC response {}", benefits);
         return benefits;
     }
 }
