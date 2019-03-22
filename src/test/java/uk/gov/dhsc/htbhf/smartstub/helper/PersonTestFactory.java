@@ -4,7 +4,6 @@ import uk.gov.dhsc.htbhf.smartstub.model.AddressDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 import uk.gov.dhsc.htbhf.smartstub.service.BenefitsService;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -22,18 +21,50 @@ public class PersonTestFactory {
     private static final String SURNAME = "Simpson";
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is ineligible.
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is ineligible according to DWP.
      */
-    public static PersonDTO aPersonWhoIsIneligible() {
+    public static PersonDTO aPersonWhoIsDWPIneligible() {
         final String nino = "IA000000C";
         return buildDefaultPerson().nino(nino).build();
     }
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is eligible.
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is ineligible according to HMRC.
      */
-    public static PersonDTO aPersonWhoIsEligible() {
+    public static PersonDTO aPersonWhoIsHMRCIneligible() {
+        final String nino = "AI000000C";
+        return buildDefaultPerson().nino(nino).build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is eligible according to DWP.
+     */
+    public static PersonDTO aPersonWhoIsDWPEligible() {
         final String nino = "EA000000C";
+        return buildDefaultPerson().nino(nino).build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is eligible according to HMRC.
+     */
+    public static PersonDTO aPersonWhoIsHMRCEligible() {
+        final String nino = "AE000000C";
+        return buildDefaultPerson().nino(nino).build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending according to DWP.
+     */
+    public static PersonDTO aPersonWhoIsDWPPending() {
+        final String nino = "PA000000C";
+        return buildDefaultPerson().nino(nino).build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending according to HMRC.
+     */
+    public static PersonDTO aPersonWhoIsHMRCPending() {
+        final String nino = "AP000000C";
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -45,19 +76,11 @@ public class PersonTestFactory {
     }
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending.
-     */
-    public static PersonDTO aPersonWhoIsPending() {
-        final String nino = "PA000000C";
-        return buildDefaultPerson().nino(nino).build();
-    }
-
-    /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under one.
      * Note, the same value is used to set the number of children under four as a child under one is also under four.
      */
     public static PersonDTO aPersonWithChildrenUnderOne(Integer numberOfChildren) {
-        final String nino = String.format("EA%d%d0000C", numberOfChildren, numberOfChildren);
+        final String nino = String.format("EE%d%d0000C", numberOfChildren, numberOfChildren);
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -65,7 +88,7 @@ public class PersonTestFactory {
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under four.
      */
     public static PersonDTO aPersonWithChildrenUnderFour(Integer numberOfChildren) {
-        final String nino = String.format("EA0%d0000C", numberOfChildren);
+        final String nino = String.format("EE0%d0000C", numberOfChildren);
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -73,7 +96,7 @@ public class PersonTestFactory {
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person with children under one and four.
      */
     public static PersonDTO aPersonWithChildren(Integer childrenUnderOne, Integer childrenUnderFour) {
-        final String nino = String.format("EA%d%d0000C", childrenUnderOne, childrenUnderFour);
+        final String nino = String.format("EE%d%d0000C", childrenUnderOne, childrenUnderFour);
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -81,7 +104,7 @@ public class PersonTestFactory {
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person not found.
      */
     public static PersonDTO aPersonNotFound() {
-        final String nino = "DA000000C";
+        final String nino = "DD000000C";
         return buildDefaultPerson().nino(nino).build();
     }
 

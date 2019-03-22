@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Builder
 @AllArgsConstructor(onConstructor_ = {@JsonCreator})
-public class EligibilityRequest {
+public class DWPEligibilityRequest {
 
     @NotNull
     @Valid
