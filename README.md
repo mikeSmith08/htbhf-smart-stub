@@ -36,5 +36,7 @@ then the stub will return the same value for children under 1 and children under
 
 * Note that the number of children returned will be dependant upon the same digits for both DWP and HMRC requests.
 
+The household identifier value is a Base64 generated value based on the NINO, DWP and HMRC requests will return different household identifiers.
+
 ## postman collection
 Use https://www.getpostman.com/collections/b1e8a55b936abd3879e3 to import a postman collection with api examples.
