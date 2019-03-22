@@ -68,7 +68,7 @@ class HMRCBenefitControllerIntegrationTest {
     }
 
     @Test
-    void shouldReturnNoMatchForMatchingNino() {
+    void shouldReturnNoMatchForUmatchedNino() {
         PersonDTO person = aPersonNotFound();
         HMRCEligibilityRequest request = anHMRCEligibilityRequestWithPerson(person);
 

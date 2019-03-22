@@ -68,7 +68,7 @@ class DWPBenefitControllerIntegrationTest {
     }
 
     @Test
-    void shouldReturnNoMatchForMatchingNino() {
+    void shouldReturnNoMatchForUmatchedNino() {
         PersonDTO person = aPersonNotFound();
         DWPEligibilityRequest request = aDWPEligibilityRequestWithPerson(person);
 
