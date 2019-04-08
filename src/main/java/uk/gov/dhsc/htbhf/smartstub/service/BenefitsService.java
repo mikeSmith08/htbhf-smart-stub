@@ -3,15 +3,15 @@ package uk.gov.dhsc.htbhf.smartstub.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
-import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
 
 import java.util.Map;
 
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.ELIGIBLE;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.INELIGIBLE;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.NOMATCH;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.ELIGIBLE;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.INELIGIBLE;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.NO_MATCH;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.PENDING;
 
 /**
  * Service for creating a {@link BenefitDTO} response based on a given national insurance number (nino).
@@ -48,9 +48,9 @@ public class BenefitsService {
             throw new IllegalArgumentException(message);
         }
         char[] ninoChars = nino.toCharArray();
-        var status = ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[eligibilityStatusPosition], NOMATCH);
-        if (status == NOMATCH) {
-            return BenefitDTO.builder().eligibilityStatus(NOMATCH).build();
+        var status = ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[eligibilityStatusPosition], NO_MATCH);
+        if (status == NO_MATCH) {
+            return BenefitDTO.builder().eligibilityStatus(NO_MATCH).build();
         }
 
         Integer childrenUnderFour = getNumberOfChildrenUnderFour(ninoChars);
