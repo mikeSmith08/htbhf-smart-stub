@@ -7,9 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus;
 import uk.gov.dhsc.htbhf.errorhandler.ErrorResponse;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
-import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
 import uk.gov.dhsc.htbhf.smartstub.model.HMRCEligibilityRequest;
 import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 
@@ -18,16 +18,16 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.ELIGIBLE;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.INELIGIBLE;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.NO_MATCH;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.PENDING;
 import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertFieldError;
 import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertSuccessfulNumberOfChildrenResponse;
 import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertSuccessfulStatusResponse;
 import static uk.gov.dhsc.htbhf.smartstub.helper.HMRCEligibilityRequestTestDataFactory.anHMRCEligibilityRequest;
 import static uk.gov.dhsc.htbhf.smartstub.helper.HMRCEligibilityRequestTestDataFactory.anHMRCEligibilityRequestWithPerson;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.*;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.ELIGIBLE;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.INELIGIBLE;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.NOMATCH;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -74,7 +74,7 @@ class HMRCBenefitControllerIntegrationTest {
 
         ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
-        assertSuccessfulStatusResponse(benefit, NOMATCH);
+        assertSuccessfulStatusResponse(benefit, NO_MATCH);
         assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isNull();
         assertThat(benefit.getBody().getNumberOfChildrenUnderFour()).isNull();
     }

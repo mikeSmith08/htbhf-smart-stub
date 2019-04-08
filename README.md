@@ -5,25 +5,25 @@ Service for stubbing out HMRC and DWP apis.
 The service returns stubbed responses depending on the national insurance number (nino) which is sent in the request.
 The nino is encoded as follows:
 
-* The first character determines the person's DWP eligibility status. (ELIGIBLE|INELIGIBLE|PENDING|NOMATCH)
+* The first character determines the person's DWP eligibility status. (ELIGIBLE|INELIGIBLE|PENDING|NO_MATCH)
 
   'E' will return ELIGIBLE
   'I' will return INELIGIBLE
   'P' will return PENDING
-  Any other character will return NOMATCH
+  Any other character will return NO_MATCH
 
   e.g. EB123456C will return ELIGIBLE according to DWP, 
-       DB123456C will return NOMATCH according to DWP.
+       DB123456C will return NO_MATCH according to DWP.
        
-* The second character determines the person's HMRC eligibility status. (ELIGIBLE|INELIGIBLE|PENDING|NOMATCH)
+* The second character determines the person's HMRC eligibility status. (ELIGIBLE|INELIGIBLE|PENDING|NO_MATCH)
 
   'E' will return ELIGIBLE
   'I' will return INELIGIBLE
   'P' will return PENDING
-  Any other character will return NOMATCH
+  Any other character will return NO_MATCH
 
   e.g. BE123456C will return ELIGIBLE according to HMRC, 
-       BD123456C will return NOMATCH according to HMRC.
+       BD123456C will return NO_MATCH according to HMRC.
     
 * The first numeric digit represents the number of children under one. (Note, that if this is greater than the number of children under four, 
 then the stub will return the same value for children under 1 and children under 4)

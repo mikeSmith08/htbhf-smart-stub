@@ -6,11 +6,11 @@ import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.ELIGIBLE;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.INELIGIBLE;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.NO_MATCH;
+import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.PENDING;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.*;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.ELIGIBLE;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.INELIGIBLE;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.NOMATCH;
-import static uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus.PENDING;
 
 class BenefitsServiceHMRCTest {
 
@@ -49,7 +49,7 @@ class BenefitsServiceHMRCTest {
 
         BenefitDTO benefit = benefitsService.getHMRCBenefits(person.getNino());
 
-        assertThat(benefit.getEligibilityStatus()).isEqualTo(NOMATCH);
+        assertThat(benefit.getEligibilityStatus()).isEqualTo(NO_MATCH);
         assertThat(benefit.getNumberOfChildrenUnderOne()).isNull();
         assertThat(benefit.getNumberOfChildrenUnderFour()).isNull();
     }

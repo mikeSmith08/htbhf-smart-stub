@@ -2,9 +2,9 @@ package uk.gov.dhsc.htbhf.smartstub.controller;
 
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.springframework.http.ResponseEntity;
+import uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus;
 import uk.gov.dhsc.htbhf.errorhandler.ErrorResponse;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
-import uk.gov.dhsc.htbhf.smartstub.model.EligibilityStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.OK;
