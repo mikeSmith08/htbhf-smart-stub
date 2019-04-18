@@ -10,6 +10,7 @@ import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.ELIGIBLE;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.INELIGIBLE;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.NO_MATCH;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.PENDING;
+import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.*;
 
 class BenefitsServiceDWPTest {
@@ -62,6 +63,7 @@ class BenefitsServiceDWPTest {
 
         assertThat(benefit.getNumberOfChildrenUnderOne()).isEqualTo(0);
         assertThat(benefit.getNumberOfChildrenUnderFour()).isEqualTo(2);
+        assertChildren(benefit, 0, 2);
     }
 
     @Test
@@ -72,6 +74,7 @@ class BenefitsServiceDWPTest {
 
         assertThat(benefit.getNumberOfChildrenUnderOne()).isEqualTo(3);
         assertThat(benefit.getNumberOfChildrenUnderFour()).isEqualTo(3);
+        assertChildren(benefit, 3, 3);
     }
 
     @Test
@@ -82,6 +85,7 @@ class BenefitsServiceDWPTest {
 
         assertThat(benefit.getNumberOfChildrenUnderOne()).isEqualTo(1);
         assertThat(benefit.getNumberOfChildrenUnderFour()).isEqualTo(1);
+        assertChildren(benefit, 1, 1);
     }
 
     @Test

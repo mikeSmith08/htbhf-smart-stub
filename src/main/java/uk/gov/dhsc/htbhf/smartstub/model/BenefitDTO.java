@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor(onConstructor_ = {@JsonCreator})
@@ -23,4 +25,7 @@ public class BenefitDTO {
 
     @JsonProperty("householdIdentifier")
     private final String householdIdentifier;
+
+    @JsonProperty("children")
+    private final List<ChildDTO> children;
 }
