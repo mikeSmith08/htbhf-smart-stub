@@ -67,11 +67,11 @@ public class BenefitsService {
                 .numberOfChildrenUnderOne(childrenUnderOne)
                 .numberOfChildrenUnderFour(childrenUnderFour)
                 .householdIdentifier(householdIdentifier)
-                .children(creatChildren(childrenUnderOne, childrenUnderFour))
+                .children(createChildren(childrenUnderOne, childrenUnderFour))
                 .build();
     }
 
-    private List<ChildDTO> creatChildren(Integer numberOfChildrenUnderOne, Integer numberOfChildrenUnderFour) {
+    private List<ChildDTO> createChildren(Integer numberOfChildrenUnderOne, Integer numberOfChildrenUnderFour) {
         List<ChildDTO> childrenUnderOne = nCopies(numberOfChildrenUnderOne, new ChildDTO(LocalDate.now().minusMonths(6)));
         List<ChildDTO> childrenBetweenOneAndFour = nCopies(numberOfChildrenUnderFour - numberOfChildrenUnderOne, new ChildDTO(LocalDate.now().minusYears(3)));
         return Stream.concat(childrenUnderOne.stream(), childrenBetweenOneAndFour.stream()).collect(Collectors.toList());

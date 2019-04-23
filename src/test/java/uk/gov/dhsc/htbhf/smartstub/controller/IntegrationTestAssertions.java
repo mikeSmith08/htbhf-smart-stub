@@ -31,16 +31,16 @@ public class IntegrationTestAssertions {
     public static void assertSuccessfulNumberOfChildrenResponse(ResponseEntity<BenefitDTO> benefit, Integer childrenUnderOne, Integer childrenUnderFour) {
         assertThat(benefit.getStatusCode()).isEqualTo(OK);
         assertThat(benefit.getBody()).isNotNull();
-        assertChildren(benefit.getBody(), childrenUnderOne, childrenUnderFour);
+        assertCorrectNumberOfChildren(benefit.getBody(), childrenUnderOne, childrenUnderFour);
     }
 
-    public static void assertChildren(BenefitDTO benefit, Integer childrenUnderOne, Integer childrenUnderFour) {
+    public static void assertCorrectNumberOfChildren(BenefitDTO benefit, Integer childrenUnderOne, Integer childrenUnderFour) {
         assertThat(benefit.getNumberOfChildrenUnderOne()).isEqualTo(childrenUnderOne);
         assertThat(benefit.getNumberOfChildrenUnderFour()).isEqualTo(childrenUnderFour);
-        assertChildren(benefit.getChildren(), childrenUnderOne, childrenUnderFour);
+        assertCorrectNumberOfChildren(benefit.getChildren(), childrenUnderOne, childrenUnderFour);
     }
 
-    private static void assertChildren(List<ChildDTO> children, Integer childrenUnderOne, Integer childrenUnderFour) {
+    private static void assertCorrectNumberOfChildren(List<ChildDTO> children, Integer childrenUnderOne, Integer childrenUnderFour) {
         assertThat(numberOfChildrenUnderOne(children)).isEqualTo(childrenUnderOne);
         assertThat(numberOfChildrenUnderFour(children)).isEqualTo(childrenUnderFour);
     }
