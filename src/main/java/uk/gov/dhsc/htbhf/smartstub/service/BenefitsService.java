@@ -5,9 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
+import uk.gov.dhsc.htbhf.smartstub.model.ChildDTO;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static java.util.Collections.nCopies;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.ELIGIBLE;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.INELIGIBLE;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.NO_MATCH;
@@ -61,7 +67,14 @@ public class BenefitsService {
                 .numberOfChildrenUnderOne(childrenUnderOne)
                 .numberOfChildrenUnderFour(childrenUnderFour)
                 .householdIdentifier(householdIdentifier)
+                .children(createChildren(childrenUnderOne, childrenUnderFour))
                 .build();
+    }
+
+    private List<ChildDTO> createChildren(Integer numberOfChildrenUnderOne, Integer numberOfChildrenUnderFour) {
+        List<ChildDTO> childrenUnderOne = nCopies(numberOfChildrenUnderOne, new ChildDTO(LocalDate.now().minusMonths(6)));
+        List<ChildDTO> childrenBetweenOneAndFour = nCopies(numberOfChildrenUnderFour - numberOfChildrenUnderOne, new ChildDTO(LocalDate.now().minusYears(3)));
+        return Stream.concat(childrenUnderOne.stream(), childrenBetweenOneAndFour.stream()).collect(Collectors.toList());
     }
 
     private Integer getNumberOfChildrenUnderOne(Integer childrenUnderFour, char[] nino) {
