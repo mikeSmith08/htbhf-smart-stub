@@ -16,15 +16,14 @@ import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static uk.gov.dhsc.htbhf.assertions.IntegrationTestAssertions.assertInternalServerErrorResponse;
+import static uk.gov.dhsc.htbhf.assertions.IntegrationTestAssertions.assertValidationErrorInResponse;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.ELIGIBLE;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.INELIGIBLE;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.NO_MATCH;
 import static uk.gov.dhsc.htbhf.eligibility.model.EligibilityStatus.PENDING;
-import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertFieldError;
-import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertSuccessfulNumberOfChildrenResponse;
-import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertSuccessfulStatusResponse;
+import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertSuccessfulResponse;
+import static uk.gov.dhsc.htbhf.smartstub.controller.IntegrationTestAssertions.assertSuccessfulResponseWithCorrectNumberOfChildren;
 import static uk.gov.dhsc.htbhf.smartstub.helper.DWPEligibilityRequestTestDataFactory.aDWPEligibilityRequest;
 import static uk.gov.dhsc.htbhf.smartstub.helper.DWPEligibilityRequestTestDataFactory.aDWPEligibilityRequestWithPerson;
 import static uk.gov.dhsc.htbhf.smartstub.helper.PersonTestFactory.*;
@@ -44,7 +43,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
-        assertSuccessfulNumberOfChildrenResponse(benefit, 0, 0);
+        assertSuccessfulResponseWithCorrectNumberOfChildren(benefit, ELIGIBLE, 0, 0);
     }
 
     @Test
@@ -54,7 +53,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
-        assertSuccessfulNumberOfChildrenResponse(benefit, 2, 2);
+        assertSuccessfulResponseWithCorrectNumberOfChildren(benefit, ELIGIBLE, 2, 2);
     }
 
     @Test
@@ -64,7 +63,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
-        assertSuccessfulNumberOfChildrenResponse(benefit, 0, 2);
+        assertSuccessfulResponseWithCorrectNumberOfChildren(benefit, ELIGIBLE, 0, 2);
     }
 
     @Test
@@ -74,7 +73,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
-        assertSuccessfulStatusResponse(benefit, NO_MATCH);
+        assertSuccessfulResponse(benefit, NO_MATCH);
         assertThat(benefit.getBody().getNumberOfChildrenUnderOne()).isNull();
         assertThat(benefit.getBody().getNumberOfChildrenUnderFour()).isNull();
     }
@@ -86,7 +85,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
-        assertSuccessfulNumberOfChildrenResponse(benefit, 1, 1);
+        assertSuccessfulResponseWithCorrectNumberOfChildren(benefit, ELIGIBLE, 1, 1);
     }
 
     @Test
@@ -109,7 +108,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<BenefitDTO> benefit = restTemplate.postForEntity(ENDPOINT, request, BenefitDTO.class);
 
-        assertSuccessfulStatusResponse(benefit, expectedStatus);
+        assertSuccessfulResponseWithCorrectNumberOfChildren(benefit, expectedStatus, 0, 0);
     }
 
     @Test
@@ -119,8 +118,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<ErrorResponse> errorResponse = restTemplate.postForEntity(ENDPOINT, request, ErrorResponse.class);
 
-        assertThat(errorResponse.getStatusCode()).isEqualTo(BAD_REQUEST);
-        assertFieldError(errorResponse.getBody(), "person.nino", "must not be null");
+        assertValidationErrorInResponse(errorResponse, "person.nino", "must not be null");
     }
 
     @Test
@@ -130,8 +128,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<ErrorResponse> errorResponse = restTemplate.postForEntity(ENDPOINT, request, ErrorResponse.class);
 
-        assertThat(errorResponse.getStatusCode()).isEqualTo(BAD_REQUEST);
-        assertFieldError(errorResponse.getBody(), "person.nino", "must match \"[a-zA-Z]{2}\\d{6}[a-dA-D]\"");
+        assertValidationErrorInResponse(errorResponse, "person.nino", "must match \"[a-zA-Z]{2}\\d{6}[a-dA-D]\"");
     }
 
     @Test
@@ -141,8 +138,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<ErrorResponse> errorResponse = restTemplate.postForEntity(ENDPOINT, request, ErrorResponse.class);
 
-        assertThat(errorResponse.getStatusCode()).isEqualTo(BAD_REQUEST);
-        assertFieldError(errorResponse.getBody(), "person.dateOfBirth", "must not be null");
+        assertValidationErrorInResponse(errorResponse, "person.dateOfBirth", "must not be null");
     }
 
     @Test
@@ -152,8 +148,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<ErrorResponse> errorResponse = restTemplate.postForEntity(ENDPOINT, request, ErrorResponse.class);
 
-        assertThat(errorResponse.getStatusCode()).isEqualTo(BAD_REQUEST);
-        assertFieldError(errorResponse.getBody(), "person.address", "must not be null");
+        assertValidationErrorInResponse(errorResponse, "person.address", "must not be null");
     }
 
     @Test
@@ -163,8 +158,7 @@ class DWPBenefitControllerIntegrationTest {
 
         ResponseEntity<ErrorResponse> error = restTemplate.postForEntity(ENDPOINT, request, ErrorResponse.class);
 
-        assertThat(error.getStatusCode()).isEqualTo(INTERNAL_SERVER_ERROR);
-        assertThat(error.getBody().getMessage()).isEqualTo("An internal server error occurred");
+        assertInternalServerErrorResponse(error);
     }
 
 }
