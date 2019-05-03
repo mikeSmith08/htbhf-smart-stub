@@ -1,7 +1,5 @@
 package uk.gov.dhsc.htbhf.smartstub.service;
 
-import uk.gov.dhsc.htbhf.smartstub.model.CardRequestDTO;
-
 /**
  * Contains the first names that will trigger a special scenario response from the card service endpoints.
  */
@@ -22,11 +20,11 @@ public enum FirstName {
     /**
      * Checks if the first name in the card request matches a special response
      *
-     * @param cardRequestDTO The card request
+     * @param firstName The first name from the card request
      * @return true if the first name matches one of the special cases
      */
-    public boolean matches(CardRequestDTO cardRequestDTO) {
-        return nameToMatch.equalsIgnoreCase(cardRequestDTO.getFirstName());
+    public boolean matchesFirstName(String firstName) {
+        return nameToMatch.equalsIgnoreCase(firstName);
     }
 
 }

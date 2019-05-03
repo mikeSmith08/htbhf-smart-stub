@@ -9,8 +9,6 @@ import uk.gov.dhsc.htbhf.smartstub.model.*;
 import java.util.UUID;
 import javax.validation.Valid;
 
-import static uk.gov.dhsc.htbhf.smartstub.service.FirstName.CARD_ERROR;
-
 //TODO MRS 2019-05-01: Add full detail of the smart stub functionality to README.md
 
 /**
@@ -22,7 +20,7 @@ import static uk.gov.dhsc.htbhf.smartstub.service.FirstName.CARD_ERROR;
 public class CardService {
 
     public CreateCardResponse createCard(CardRequestDTO cardRequestDTO) {
-        if (CARD_ERROR.matches(cardRequestDTO)) {
+        if (FirstName.CARD_ERROR.matchesFirstName(cardRequestDTO.getFirstName())) {
             String message = "First name provided (" + cardRequestDTO.getFirstName() + ") has been configured to trigger an Exception when creating a card";
             log.info(message);
             throw new IllegalArgumentException(message);

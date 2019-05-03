@@ -46,7 +46,7 @@ class CardServicesControllerIntegrationTest {
     }
 
     @Test
-    void shouldFailWithValidationErrorWithInvalidFirstName() {
+    void shouldFailWithValidationErrorWithMissingFirstName() {
         //Given
         CardRequestDTO request = aCardRequestWithLastName(null);
         //When
