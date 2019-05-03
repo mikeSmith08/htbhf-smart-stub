@@ -1,24 +1,19 @@
 package uk.gov.dhsc.htbhf.smartstub.helper;
 
-import uk.gov.dhsc.htbhf.smartstub.model.AddressDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 import uk.gov.dhsc.htbhf.smartstub.service.BenefitsService;
 
-import java.time.LocalDate;
+import static uk.gov.dhsc.htbhf.smartstub.helper.AddressDTOTestDataFactory.aValidAddress;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.HOMER_DATE_OF_BIRTH;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.HOMER_FIRST_NAME;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SIMPSON_LAST_NAME;
 
 /**
  * Test data factory for {@link PersonDTO} objects.
  */
 public class PersonTestFactory {
 
-    private static final LocalDate DOB = LocalDate.parse("1985-12-31");
-    private static final String ADDRESS_LINE_1 = "Flat b";
-    private static final String ADDRESS_LINE_2 = "123 Fake street";
-    private static final String TOWN_OR_CITY = "Springfield";
-    private static final String POSTCODE = "AA1 1AA";
     private static final String NINO = "EB123456C";
-    private static final String FORENAME = "Lisa";
-    private static final String SURNAME = "Simpson";
 
     /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is ineligible according to DWP.
@@ -138,19 +133,11 @@ public class PersonTestFactory {
 
     private static PersonDTO.PersonDTOBuilder buildDefaultPerson() {
         return PersonDTO.builder()
-                .dateOfBirth(DOB)
+                .dateOfBirth(HOMER_DATE_OF_BIRTH)
                 .nino(NINO)
                 .address(aValidAddress())
-                .forename(FORENAME)
-                .surname(SURNAME);
+                .forename(HOMER_FIRST_NAME)
+                .surname(SIMPSON_LAST_NAME);
     }
 
-    private static AddressDTO aValidAddress() {
-        return AddressDTO.builder()
-                .addressLine1(ADDRESS_LINE_1)
-                .addressLine2(ADDRESS_LINE_2)
-                .townOrCity(TOWN_OR_CITY)
-                .postcode(POSTCODE)
-                .build();
-    }
 }
