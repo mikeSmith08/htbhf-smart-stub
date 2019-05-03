@@ -9,8 +9,6 @@ import uk.gov.dhsc.htbhf.smartstub.model.*;
 import java.util.UUID;
 import javax.validation.Valid;
 
-//TODO MRS 2019-05-01: Add full detail of the smart stub functionality to README.md
-
 /**
  * This service is responsible for creating stub responses to card requests. The current stub responses are:
  * See README.md for details on mappings.
