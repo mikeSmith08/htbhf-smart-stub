@@ -1,27 +1,36 @@
 package uk.gov.dhsc.htbhf.smartstub.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import uk.gov.dhsc.htbhf.smartstub.model.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static uk.gov.dhsc.htbhf.smartstub.helper.CardRequestDTOTestDataFactory.aCardRequestWithFirstName;
-import static uk.gov.dhsc.htbhf.smartstub.helper.CardRequestDTOTestDataFactory.aValidCardRequest;
 import static uk.gov.dhsc.htbhf.smartstub.helper.DepositFundsRequestDTOTestDataFactory.aValidDepositFundsRequest;
 
 class CardServiceTest {
 
     private CardService cardService = new CardService();
 
-    @Test
-    void shouldSuccessfullyCreateCard() {
+    @ParameterizedTest
+    @CsvSource({
+            "NOTOPUP, 1-",
+            "PARTIAL, 2-",
+            "BALANCEERROR, 3-",
+            "PAYMENTERROR, 4-",
+            "MARGE, 9-"
+
+    })
+    void shouldSuccessfullyCreateCard(String firstName, String expectedCardIdPrefix) {
         //Given
-        CardRequestDTO cardRequestDTO = aValidCardRequest();
+        CardRequestDTO cardRequestDTO = aCardRequestWithFirstName(firstName);
         //When
         CreateCardResponse response = cardService.createCard(cardRequestDTO);
         //Then
         assertThat(response).isNotNull();
-        assertThat(response.getCardAccountId()).isNotNull();
+        assertThat(response.getCardAccountId()).isNotNull().startsWith(expectedCardIdPrefix);
     }
 
     @Test
@@ -29,7 +38,7 @@ class CardServiceTest {
         //Given
         CardRequestDTO cardRequestDTO = aCardRequestWithFirstName("CardError");
         //When
-        IllegalArgumentException thrown = catchThrowableOfType(() -> cardService.createCard(cardRequestDTO), IllegalArgumentException.class);
+        RuntimeException thrown = catchThrowableOfType(() -> cardService.createCard(cardRequestDTO), RuntimeException.class);
         //Then
         assertThat(thrown).hasMessage("First name provided (CardError) has been configured to trigger an Exception when creating a card");
     }
@@ -47,7 +56,7 @@ class CardServiceTest {
     }
 
     @Test
-    void shlouldDepositFundsSuccessfully() {
+    void shouldDepositFundsSuccessfully() {
         //Given
         String cardId = "myId";
         DepositFundsRequestDTO requestDTO = aValidDepositFundsRequest();
