@@ -64,7 +64,8 @@ A first name of CardError will cause the card creation to fail.
 ### Current Balance
 
 Scenarios for the current balance request are based off the cardId returned from the createCard request,
-which is in turn based off the first name provided for that request.
+which is in turn based off the first name provided for that request. Both the available balance and ledger balance
+(unreconciled balance) will be returned and will always be the same amount.
 
 #### Scenario 1 - Default, Card prefix: 9
 

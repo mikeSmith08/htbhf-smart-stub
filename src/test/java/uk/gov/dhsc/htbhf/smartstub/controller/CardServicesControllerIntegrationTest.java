@@ -1,12 +1,10 @@
 package uk.gov.dhsc.htbhf.smartstub.controller;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.dhsc.htbhf.errorhandler.ErrorResponse;
 import uk.gov.dhsc.htbhf.smartstub.model.*;
 
@@ -23,7 +21,6 @@ import static uk.gov.dhsc.htbhf.smartstub.helper.CardRequestDTOTestDataFactory.a
 import static uk.gov.dhsc.htbhf.smartstub.helper.DepositFundsRequestDTOTestDataFactory.aDepositFundsRequestWithAmount;
 import static uk.gov.dhsc.htbhf.smartstub.helper.DepositFundsRequestDTOTestDataFactory.aValidDepositFundsRequest;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CardServicesControllerIntegrationTest {
 
@@ -76,8 +73,9 @@ class CardServicesControllerIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(OK);
         CardBalanceResponse balanceResponse = response.getBody();
         assertThat(balanceResponse).isNotNull();
-        assertThat(balanceResponse.getAvailableBalanceInPence()).isEqualTo(0);
-        assertThat(balanceResponse.getLedgerBalanceInPence()).isEqualTo(0);
+        assertThat(balanceResponse.getAvailableBalanceInPence()).isBetween(0, 1239);
+        assertThat(balanceResponse.getLedgerBalanceInPence()).isBetween(0, 1239);
+        assertThat(balanceResponse.getLedgerBalanceInPence()).isEqualTo(balanceResponse.getAvailableBalanceInPence());
     }
 
     @Test
