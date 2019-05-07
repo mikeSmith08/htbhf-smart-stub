@@ -10,3 +10,8 @@ logging:
 
 server:
   port: 8120
+
+get-balance:
+  max-low-balance-in-pence: 1239
+  partial-payment-balance-in-pence: 1860
+  high-balance-in-pence: 100000

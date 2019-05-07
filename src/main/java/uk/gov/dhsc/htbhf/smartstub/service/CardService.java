@@ -1,5 +1,6 @@
 package uk.gov.dhsc.htbhf.smartstub.service;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,10 @@ import static uk.gov.dhsc.htbhf.smartstub.service.CardIdBuilder.buildCardIdForFi
  */
 @Service
 @Slf4j
+@AllArgsConstructor
 public class CardService {
+
+    private final CardBalanceGenerator cardBalanceGenerator;
 
     public CreateCardResponse createCard(CardRequestDTO cardRequestDTO) {
         String firstName = cardRequestDTO.getFirstName();
@@ -32,9 +36,10 @@ public class CardService {
     }
 
     public CardBalanceResponse getCardBalance(String cardId) {
+        int balance = cardBalanceGenerator.generateBalanceForCardId(cardId);
         return CardBalanceResponse.builder()
-                .availableBalanceInPence(0)
-                .ledgerBalanceInPence(0)
+                .availableBalanceInPence(balance)
+                .ledgerBalanceInPence(balance)
                 .build();
     }
 

@@ -49,6 +49,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
     testImplementation "org.junit.vintage:junit-vintage-engine:${junitVersion}"
+    testImplementation "org.mockito:mockito-junit-jupiter:2.23.4"
     testImplementation "uk.gov.dhsc.htbhf:htbhf-common-test:latest.release"
 }
 
