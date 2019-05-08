@@ -1,6 +1,8 @@
 package uk.gov.dhsc.htbhf.smartstub.controller;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -13,6 +15,7 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
+import static uk.gov.dhsc.htbhf.assertions.IntegrationTestAssertions.assertInternalServerErrorResponse;
 import static uk.gov.dhsc.htbhf.assertions.IntegrationTestAssertions.assertValidationErrorInResponse;
 import static uk.gov.dhsc.htbhf.smartstub.helper.AddressDTOTestDataFactory.anAddressWithAddressLine1;
 import static uk.gov.dhsc.htbhf.smartstub.helper.CardRequestDTOTestDataFactory.aCardRequestWithAddress;
@@ -88,10 +91,16 @@ class CardServicesControllerIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
     }
 
-    @Test
-    void shouldSuccessfullyDepositFunds() {
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "myId",
+            "1-sdlfj",
+            "2-dfsdfjn",
+            "3-sdfsdfjn",
+            "9-asdkkl"
+    })
+    void shouldSuccessfullyDepositFunds(String cardId) {
         //Given
-        String cardId = "myId";
         DepositFundsRequestDTO request = aValidDepositFundsRequest();
         //When
         ResponseEntity<DepositFundsResponse> response = restTemplate.postForEntity(buildDepositEndpoint(cardId), request, DepositFundsResponse.class);
@@ -122,6 +131,17 @@ class CardServicesControllerIntegrationTest {
         ResponseEntity<ErrorResponse> response = restTemplate.postForEntity(buildDepositEndpoint(cardId), request, ErrorResponse.class);
         //Then
         assertThat(response.getStatusCode()).isEqualTo(NOT_FOUND);
+    }
+
+    @Test
+    void shouldTriggerFailScenarioForDepositWithCardIdPrefixedWith4() {
+        //Given
+        String cardId = "4-sdfkjsdhb";
+        DepositFundsRequestDTO request = aValidDepositFundsRequest();
+        //When
+        ResponseEntity<ErrorResponse> error = restTemplate.postForEntity(buildDepositEndpoint(cardId), request, ErrorResponse.class);
+        //Then
+        assertInternalServerErrorResponse(error);
     }
 
     private String buildBalanceEndpoint(String cardId) {
