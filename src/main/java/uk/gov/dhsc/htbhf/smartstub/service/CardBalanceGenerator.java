@@ -36,7 +36,8 @@ public class CardBalanceGenerator {
         }
         FirstNameScenario scenario = scenarioMatchingCardIdPrefix.get();
         if (scenario == BALANCE_ERROR) {
-            String message = "First name provided (" + scenario.getNameToMatch() + ") has been configured to trigger an Exception when getting the balance for the card";
+            String message = String.format("Card ID provided [%s] matches prefix [%s] that has been configured to trigger an Exception when getting the balance for the card",
+                    cardId, BALANCE_ERROR.getCardIdPrefixToMatch());
             log.info(message);
             throw new RuntimeException(message);
         }

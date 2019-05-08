@@ -3,14 +3,14 @@ package uk.gov.dhsc.htbhf.smartstub.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import uk.gov.dhsc.htbhf.smartstub.model.*;
 
+import java.util.Optional;
 import java.util.UUID;
-import javax.validation.Valid;
 
 import static uk.gov.dhsc.htbhf.smartstub.service.CardIdBuilder.buildCardIdForFirstName;
+import static uk.gov.dhsc.htbhf.smartstub.service.FirstNameScenario.PAYMENT_ERROR;
+import static uk.gov.dhsc.htbhf.smartstub.service.FirstNameScenario.findScenarioMatchingCardIdPrefix;
 
 /**
  * This service is responsible for creating stub responses to card requests. The current stub responses are:
@@ -26,7 +26,7 @@ public class CardService {
     public CreateCardResponse createCard(CardRequestDTO cardRequestDTO) {
         String firstName = cardRequestDTO.getFirstName();
         if (FirstNameScenario.CARD_ERROR.matchesFirstName(firstName)) {
-            String message = "First name provided (" + firstName + ") has been configured to trigger an Exception when creating a card";
+            String message = String.format("First name provided [%s] has been configured to trigger an Exception when creating a card", firstName);
             log.info(message);
             throw new RuntimeException(message);
         }
@@ -43,11 +43,21 @@ public class CardService {
                 .build();
     }
 
-    public DepositFundsResponse depositFunds(@PathVariable("cardId") String cardId,
-                                             @RequestBody @Valid DepositFundsRequestDTO depositFundsRequestDTO) {
+    public DepositFundsResponse depositFunds(String cardId, DepositFundsRequestDTO depositFundsRequestDTO) {
+        if (isPaymentErrorScenario(cardId)) {
+            String message = String.format("Card ID provided [%s] matches prefix [%s] that has been configured to trigger an Exception when trying to deposit funds to the card",
+                    cardId, PAYMENT_ERROR.getCardIdPrefixToMatch());
+            log.info(message);
+            throw new RuntimeException(message);
+        }
         return DepositFundsResponse.builder()
                 .referenceId(UUID.randomUUID().toString())
                 .build();
+    }
+
+    private boolean isPaymentErrorScenario(String cardId) {
+        Optional<FirstNameScenario> scenarioMatchingCardIdPrefix = findScenarioMatchingCardIdPrefix(cardId);
+        return scenarioMatchingCardIdPrefix.isPresent() && scenarioMatchingCardIdPrefix.get() == PAYMENT_ERROR;
     }
 
 }
