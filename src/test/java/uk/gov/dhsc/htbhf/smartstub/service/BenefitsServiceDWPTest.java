@@ -27,6 +27,15 @@ class BenefitsServiceDWPTest {
     }
 
     @Test
+    void shouldReturnIneligibleForAlternateMatchingNino() {
+        PersonDTO person = anAlternatePersonWhoIsDWPIneligible();
+
+        BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
+
+        assertThat(benefit.getEligibilityStatus()).isEqualTo(INELIGIBLE);
+    }
+
+    @Test
     void shouldReturnEligibleForMatchingNino() {
         PersonDTO person = aPersonWhoIsDWPEligible();
 
@@ -36,8 +45,26 @@ class BenefitsServiceDWPTest {
     }
 
     @Test
+    void shouldReturnEligibleForAlternateMatchingNino() {
+        PersonDTO person = anAlternatePersonWhoIsDWPEligible();
+
+        BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
+
+        assertThat(benefit.getEligibilityStatus()).isEqualTo(ELIGIBLE);
+    }
+
+    @Test
     void shouldReturnPendingForMatchingNino() {
         PersonDTO person = aPersonWhoIsDWPPending();
+
+        BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
+
+        assertThat(benefit.getEligibilityStatus()).isEqualTo(PENDING);
+    }
+
+    @Test
+    void shouldReturnPendingForAlternateMatchingNino() {
+        PersonDTO person = anAlternatePersonWhoIsDWPPending();
 
         BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
 
