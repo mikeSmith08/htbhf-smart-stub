@@ -1,5 +1,5 @@
 # htbhf-smart-stub
-Service for stubbing out HMRC, DWP and Card Service provider apis.
+Service for stubbing out DWP and Card Service provider apis.
 
 ## Benefit Eligibility Stubbing
 The service returns stubbed responses depending on the national insurance number (nino) which is sent in the request.
@@ -21,19 +21,7 @@ The nino is encoded as follows:
        FE123456C will return ELIGIBLE according to DWP,
        PE123456C will return PENDING according to DWP,
        DB123456C will return NO_MATCH according to DWP.
-       
-* The second character determines the person's HMRC eligibility status (when going to the hmrc endpoint). (ELIGIBLE|INELIGIBLE|PENDING|NO_MATCH)
-
-  'E' will return ELIGIBLE
-  'I' will return INELIGIBLE
-  'P' will return PENDING
-  Any other character will return NO_MATCH
-
-  e.g. 
-       
-       BE123456C will return ELIGIBLE according to HMRC, 
-       BD123456C will return NO_MATCH according to HMRC.       
-       
+             
     
 * The first numeric digit represents the number of children under one. (Note, that if this is greater than the number of children under four, 
 then the stub will return the same value for children under 1 and children under 4)
@@ -44,9 +32,7 @@ then the stub will return the same value for children under 1 and children under
   
 * The NINO ZZ999999D can be used if you want to trigger an error within the Smart stub, which will in turn return a 500 response.
 
-* Note that the number of children returned will be dependant upon the same digits for both DWP and HMRC requests.
-
-The household identifier value is a Base64 generated value based on the NINO, DWP and HMRC requests will return different household identifiers.
+The household identifier value is a Base64 generated value based on the NINO.
 
 ## postman collection
 Use https://www.getpostman.com/collections/b1e8a55b936abd3879e3 to import a postman collection with api examples.
