@@ -32,14 +32,6 @@ public class PersonTestFactory {
     }
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is ineligible according to HMRC.
-     */
-    public static PersonDTO aPersonWhoIsHMRCIneligible() {
-        final String nino = "AI000000C";
-        return buildDefaultPerson().nino(nino).build();
-    }
-
-    /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is eligible according to DWP (First character is 'E').
      */
     public static PersonDTO aPersonWhoIsDWPEligible() {
@@ -56,14 +48,6 @@ public class PersonTestFactory {
     }
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is eligible according to HMRC.
-     */
-    public static PersonDTO aPersonWhoIsHMRCEligible() {
-        final String nino = "AE000000C";
-        return buildDefaultPerson().nino(nino).build();
-    }
-
-    /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending according to DWP (First character is 'P').
      */
     public static PersonDTO aPersonWhoIsDWPPending() {
@@ -75,14 +59,6 @@ public class PersonTestFactory {
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending according to DWP (Second character is 'P').
      */
     public static PersonDTO anAlternatePersonWhoIsDWPPending() {
-        final String nino = "AP000000C";
-        return buildDefaultPerson().nino(nino).build();
-    }
-
-    /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending according to HMRC.
-     */
-    public static PersonDTO aPersonWhoIsHMRCPending() {
         final String nino = "AP000000C";
         return buildDefaultPerson().nino(nino).build();
     }
