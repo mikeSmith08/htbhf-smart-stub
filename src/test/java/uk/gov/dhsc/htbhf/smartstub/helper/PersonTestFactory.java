@@ -64,7 +64,7 @@ public class PersonTestFactory {
     }
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that will trigger an Exception from the service
+     * Creates a {@link PersonDTO} request object with a nino that will trigger an Exception from the service.
      */
     public static PersonDTO aPersonWhoWillTriggerAnError() {
         return buildDefaultPerson().nino(BenefitsService.EXCEPTIONAL_NINO).build();

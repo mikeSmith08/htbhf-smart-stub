@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'checkstyle'
 }
 
 apply plugin: 'java'
@@ -46,6 +47,7 @@ dependencies {
     implementation "uk.gov.dhsc.htbhf:htbhf-common-rest:latest.release"
     implementation "org.apache.commons:commons-lang3:3.9"
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.github.spotbugs:spotbugs-annotations:3.1.2"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
@@ -61,4 +63,8 @@ test {
         junitXml.enabled = false
         html.enabled = true
     }
+}
+
+checkstyle {
+    toolVersion "8.15"
 }

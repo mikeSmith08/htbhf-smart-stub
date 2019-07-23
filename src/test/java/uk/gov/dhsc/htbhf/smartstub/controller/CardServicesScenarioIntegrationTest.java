@@ -19,7 +19,7 @@ import static uk.gov.dhsc.htbhf.smartstub.helper.DepositFundsRequestDTOTestDataF
 
 /**
  * Runs integration tests that make sure the stubbing required for the 3 card services call work properly together for
- * the following scenarios:
+ * the following scenarios.
  * <ul>
  *   <li>Full success</li>
  *   <ol>
@@ -69,7 +69,7 @@ class CardServicesScenarioIntegrationTest {
     private TestRestTemplate restTemplate;
 
     /**
-     * Full success
+     * Full success.
      * - Create Card returns a cardId prefixed with 9
      * - Get balance returns a low balance to allow a full top-up (under £12.40)
      * - Deposit funds works correctly
@@ -86,12 +86,13 @@ class CardServicesScenarioIntegrationTest {
         assertBalanceResponseSuccessfulForLowBalance(cardBalanceResponse);
         //Deposit funds should be successful
         DepositFundsRequestDTO depositFundsRequest = aValidDepositFundsRequest();
-        ResponseEntity<DepositFundsResponse> depositFundsResponse = restTemplate.postForEntity(buildDepositEndpoint(cardAccountId), depositFundsRequest, DepositFundsResponse.class);
+        ResponseEntity<DepositFundsResponse> depositFundsResponse
+                = restTemplate.postForEntity(buildDepositEndpoint(cardAccountId), depositFundsRequest, DepositFundsResponse.class);
         assertDepositFundsResponseSuccessful(depositFundsResponse);
     }
 
     /**
-     * No Top-up Allowed
+     * No Top-up Allowed.
      * - Create card returns a cardId prefixed with 1
      * - Get balance returns an amount that allows no top-up (£1000)
      */
@@ -108,7 +109,7 @@ class CardServicesScenarioIntegrationTest {
     }
 
     /**
-     * Partial Top-up Allowed
+     * Partial Top-up Allowed.
      * - Create card returns a cardId prefixed with 2
      * - Get balance returns an amount that allows no top-up (£18.60)
      * - Deposit funds should be successful
@@ -125,12 +126,13 @@ class CardServicesScenarioIntegrationTest {
         assertBalanceResponseSuccessfulForSpecificBalance(cardBalanceResponse, 1860);
         //Deposit funds should be successful
         DepositFundsRequestDTO depositFundsRequest = aValidDepositFundsRequest();
-        ResponseEntity<DepositFundsResponse> depositFundsResponse = restTemplate.postForEntity(buildDepositEndpoint(cardAccountId), depositFundsRequest, DepositFundsResponse.class);
+        ResponseEntity<DepositFundsResponse> depositFundsResponse
+                = restTemplate.postForEntity(buildDepositEndpoint(cardAccountId), depositFundsRequest, DepositFundsResponse.class);
         assertDepositFundsResponseSuccessful(depositFundsResponse);
     }
 
     /**
-     * Create card failure
+     * Create card failure.
      * - Create card fails when given a first name of CardError
      */
     @Test
@@ -142,7 +144,7 @@ class CardServicesScenarioIntegrationTest {
     }
 
     /**
-     * Check Balance Failure
+     * Check Balance Failure.
      * - Create card returns a cardId prefixed with 3
      * - Get Balance fails with a 500
      */
@@ -159,7 +161,7 @@ class CardServicesScenarioIntegrationTest {
     }
 
     /**
-     * Deposit funds Failure
+     * Deposit funds Failure.
      * - Create card returns a cardId prefixed with 4
      * - Get balance returns a low balance to allow a full top-up (under £12.40)
      * - Deposit funds fails with a 500

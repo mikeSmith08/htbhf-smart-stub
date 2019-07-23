@@ -15,8 +15,8 @@ import static uk.gov.dhsc.htbhf.smartstub.service.FirstNameScenario.*;
 @Component
 public class CardBalanceGenerator {
 
-    private int maxLowBalanceInPence;
-    private Map<FirstNameScenario, IntSupplier> scenarioBalanceMap;
+    private final int maxLowBalanceInPence;
+    private final Map<FirstNameScenario, IntSupplier> scenarioBalanceMap;
 
     public CardBalanceGenerator(@Value("${get-balance.max-low-balance-in-pence}") int maxLowBalanceInPence,
                                 @Value("${get-balance.partial-payment-balance-in-pence}") int partialPaymentBalanceInPence,
@@ -36,8 +36,8 @@ public class CardBalanceGenerator {
         }
         FirstNameScenario scenario = scenarioMatchingCardIdPrefix.get();
         if (scenario == BALANCE_ERROR) {
-            String message = String.format("Card ID provided [%s] matches prefix [%s] that has been configured to trigger an Exception when getting the balance for the card",
-                    cardId, BALANCE_ERROR.getCardIdPrefixToMatch());
+            String message = String.format("Card ID provided [%s] matches prefix [%s] that has been configured to trigger an Exception when getting "
+                            + "the balance for the card", cardId, BALANCE_ERROR.getCardIdPrefixToMatch());
             log.info(message);
             throw new RuntimeException(message);
         }

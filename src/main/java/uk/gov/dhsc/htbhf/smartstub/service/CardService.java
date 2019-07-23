@@ -45,8 +45,8 @@ public class CardService {
 
     public DepositFundsResponse depositFunds(String cardId, DepositFundsRequestDTO depositFundsRequestDTO) {
         if (isPaymentErrorScenario(cardId)) {
-            String message = String.format("Card ID provided [%s] matches prefix [%s] that has been configured to trigger an Exception when trying to deposit funds to the card",
-                    cardId, PAYMENT_ERROR.getCardIdPrefixToMatch());
+            String message = String.format("Card ID provided [%s] matches prefix [%s] that has been configured to trigger an Exception when trying to deposit "
+                            + "funds to the card", cardId, PAYMENT_ERROR.getCardIdPrefixToMatch());
             log.info(message);
             throw new RuntimeException(message);
         }
