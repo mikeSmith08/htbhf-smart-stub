@@ -66,7 +66,8 @@ class CardBalanceGeneratorTest {
         //When
         RuntimeException thrown = catchThrowableOfType(() -> cardBalanceGenerator.generateBalanceForCardId(cardId), RuntimeException.class);
         //Then
-        assertThat(thrown).hasMessage("Card ID provided [3-sadkfjh] matches prefix [3] that has been configured to trigger an Exception when getting the balance for the card");
+        assertThat(thrown).hasMessage("Card ID provided [3-sadkfjh] matches prefix [3] that has been configured to trigger an Exception when getting "
+                + "the balance for the card");
     }
 
     @Test

@@ -33,7 +33,7 @@ public enum FirstNameScenario {
     }
 
     /**
-     * Checks if the first name in the card request matches a special response
+     * Checks if the first name in the card request matches a special response.
      *
      * @param firstName The first name from the card request
      * @return true if the first name matches one of the special cases
@@ -43,7 +43,7 @@ public enum FirstNameScenario {
     }
 
     /**
-     * Checks if the given cardId has the correct prefix matching this enum
+     * Checks if the given cardId has the correct prefix matching this enum.
      *
      * @param cardId The cardId to check
      * @return true if the prefix matches
@@ -64,7 +64,7 @@ public enum FirstNameScenario {
 
     /**
      * Method used to check if the provided cardId matches any given prefix and return
-     * an Optional of that FirstNameScenario or empty
+     * an Optional of that FirstNameScenario or empty.
      *
      * @param cardId The cardId to check for prefixes
      * @return An Optional of the matching FirstNameScenario or empty.
@@ -77,7 +77,7 @@ public enum FirstNameScenario {
 
     /**
      * Method used to check if the provided first name in the card request matches any given FirstNameScenario
-     * and return an Optional of that FirstNameScenario or empty
+     * and return an Optional of that FirstNameScenario or empty.
      *
      * @param cardRequestFirstName The first name from the card request
      * @return An Optional of the matching FirstNameScenario or empty.

@@ -1,6 +1,5 @@
 package uk.gov.dhsc.htbhf.smartstub.helper;
 
-
 import uk.gov.dhsc.htbhf.smartstub.model.AddressDTO;
 
 import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SIMPSONS_ADDRESS_LINE_1;

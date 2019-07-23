@@ -100,7 +100,8 @@ class CardServiceTest {
         //When
         RuntimeException thrown = catchThrowableOfType(() -> cardService.depositFunds(cardId, requestDTO), RuntimeException.class);
         //Then
-        assertThat(thrown).hasMessage("Card ID provided [4-myId] matches prefix [4] that has been configured to trigger an Exception when trying to deposit funds to the card");
+        assertThat(thrown).hasMessage("Card ID provided [4-myId] matches prefix [4] that has been configured to trigger an Exception when trying to deposit "
+                + "funds to the card");
         verifyZeroInteractions(cardBalanceGenerator);
     }
 }

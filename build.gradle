@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
+    id 'checkstyle'
 }
 
 apply plugin: 'java'
@@ -61,4 +62,8 @@ test {
         junitXml.enabled = false
         html.enabled = true
     }
+}
+
+checkstyle {
+    toolVersion "8.15"
 }
