@@ -68,11 +68,17 @@ public class BenefitsService {
 
     private EligibilityStatus getEligibilityStatus(char[] ninoChars) {
         // Either of the first two characters can be used to determine eligibility. If the first character maps to NO_MATCH, then check the second character.
-        EligibilityStatus status = ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[DWP_ELIGIBILITY_STATUS_FIRST_POSITION], NO_MATCH);
-        if (status == NO_MATCH) {
-            return ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[DWP_ELIGIBILITY_STATUS_SECOND_POSITION], NO_MATCH);
+        EligibilityStatus firstPositionStatus = ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[DWP_ELIGIBILITY_STATUS_FIRST_POSITION], NO_MATCH);
+        EligibilityStatus secondPositionStatus = ELIGIBILITY_STATUS_MAP.getOrDefault(ninoChars[DWP_ELIGIBILITY_STATUS_SECOND_POSITION], NO_MATCH);
+        if (firstPositionStatus == ELIGIBLE || secondPositionStatus == ELIGIBLE){
+            return ELIGIBLE;
+        } else if (firstPositionStatus == INELIGIBLE || secondPositionStatus == INELIGIBLE){
+            return INELIGIBLE;
+        } else if (firstPositionStatus == PENDING || secondPositionStatus == PENDING){
+            return PENDING;
         }
-        return status;
+
+        return NO_MATCH;
     }
 
     private List<ChildDTO> createChildren(Integer numberOfChildrenUnderOne, Integer numberOfChildrenUnderFour) {

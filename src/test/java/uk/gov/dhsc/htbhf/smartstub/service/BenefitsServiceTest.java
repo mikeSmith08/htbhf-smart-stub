@@ -1,6 +1,8 @@
 package uk.gov.dhsc.htbhf.smartstub.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.dhsc.htbhf.smartstub.model.BenefitDTO;
 import uk.gov.dhsc.htbhf.smartstub.model.PersonDTO;
 
@@ -17,69 +19,68 @@ class BenefitsServiceTest {
 
     private BenefitsService benefitsService = new BenefitsService(new IdentifierService());
 
-    @Test
-    void shouldReturnIneligibleForMatchingNino() {
-        PersonDTO person = aPersonWhoIsDWPIneligible();
-
-        BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
-
-        assertThat(benefit.getEligibilityStatus()).isEqualTo(INELIGIBLE);
-    }
-
-    @Test
-    void shouldReturnIneligibleForAlternateMatchingNino() {
-        PersonDTO person = anAlternatePersonWhoIsDWPIneligible();
-
-        BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
-
-        assertThat(benefit.getEligibilityStatus()).isEqualTo(INELIGIBLE);
-    }
-
-    @Test
-    void shouldReturnEligibleForMatchingNino() {
-        PersonDTO person = aPersonWhoIsDWPEligible();
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "EA123456C",
+            "IE123456C",
+            "PE123456C",
+            "EE123456C",
+            "XE123456C"
+    })
+    void shouldReturnEligibleForMatchingNino(String nino) {
+        PersonDTO person = aPersonWithNino(nino);
 
         BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
 
         assertThat(benefit.getEligibilityStatus()).isEqualTo(ELIGIBLE);
     }
 
-    @Test
-    void shouldReturnEligibleForAlternateMatchingNino() {
-        PersonDTO person = anAlternatePersonWhoIsDWPEligible();
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "IA123456C",
+            "XI123456C",
+            "PI123456C",
+            "II123456C",
+            "XI123456C"
+    })
+    void shouldReturnInEligibleForMatchingNino(String nino) {
+        PersonDTO person = aPersonWithNino(nino);
 
         BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
 
-        assertThat(benefit.getEligibilityStatus()).isEqualTo(ELIGIBLE);
+        assertThat(benefit.getEligibilityStatus()).isEqualTo(INELIGIBLE);
     }
 
-    @Test
-    void shouldReturnPendingForMatchingNino() {
-        PersonDTO person = aPersonWhoIsDWPPending();
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "PA123456C",
+            "XP123456C",
+            "VP123456C",
+            "PP123456C",
+            "XP123456C"
+    })
+    void shouldReturnPendingForMatchingNino(String nino) {
+        PersonDTO person = aPersonWithNino(nino);
 
         BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
 
         assertThat(benefit.getEligibilityStatus()).isEqualTo(PENDING);
     }
 
-    @Test
-    void shouldReturnPendingForAlternateMatchingNino() {
-        PersonDTO person = anAlternatePersonWhoIsDWPPending();
-
-        BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
-
-        assertThat(benefit.getEligibilityStatus()).isEqualTo(PENDING);
-    }
-
-    @Test
-    void shouldReturnNoMatchNino() {
-        PersonDTO person = aPersonNotFound();
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "BA123456C",
+            "XW123456C",
+            "VN123456C",
+            "OK123456C",
+            "XL123456C"
+    })
+    void shouldReturnNoMatchForMatchingNino(String nino) {
+        PersonDTO person = aPersonWithNino(nino);
 
         BenefitDTO benefit = benefitsService.getDWPBenefits(person.getNino());
 
         assertThat(benefit.getEligibilityStatus()).isEqualTo(NO_MATCH);
-        assertThat(benefit.getNumberOfChildrenUnderOne()).isNull();
-        assertThat(benefit.getNumberOfChildrenUnderFour()).isNull();
     }
 
     @Test
