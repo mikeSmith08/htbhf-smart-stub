@@ -24,14 +24,6 @@ public class PersonTestFactory {
     }
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is ineligible according to DWP (Second character is 'I').
-     */
-    public static PersonDTO anAlternatePersonWhoIsDWPIneligible() {
-        final String nino = "AI000000C";
-        return buildDefaultPerson().nino(nino).build();
-    }
-
-    /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is eligible according to DWP (First character is 'E').
      */
     public static PersonDTO aPersonWhoIsDWPEligible() {
@@ -40,26 +32,10 @@ public class PersonTestFactory {
     }
 
     /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is eligible according to DWP (Second character is 'E').
-     */
-    public static PersonDTO anAlternatePersonWhoIsDWPEligible() {
-        final String nino = "AE000000C";
-        return buildDefaultPerson().nino(nino).build();
-    }
-
-    /**
      * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending according to DWP (First character is 'P').
      */
     public static PersonDTO aPersonWhoIsDWPPending() {
         final String nino = "PA000000C";
-        return buildDefaultPerson().nino(nino).build();
-    }
-
-    /**
-     * Creates a {@link PersonDTO} request object with a nino that encodes to a person who is pending according to DWP (Second character is 'P').
-     */
-    public static PersonDTO anAlternatePersonWhoIsDWPPending() {
-        final String nino = "AP000000C";
         return buildDefaultPerson().nino(nino).build();
     }
 
@@ -129,6 +105,13 @@ public class PersonTestFactory {
      */
     public static PersonDTO aPersonWithAnInvalidNino() {
         return buildDefaultPerson().nino("ab123").build();
+    }
+
+    /**
+     * Creates a {@link PersonDTO} request object with the given nino.
+     */
+    public static PersonDTO aPersonWithNino(String nino) {
+        return buildDefaultPerson().nino(nino).build();
     }
 
     private static PersonDTO.PersonDTOBuilder buildDefaultPerson() {
