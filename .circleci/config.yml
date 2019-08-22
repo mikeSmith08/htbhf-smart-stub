@@ -1,0 +1,65 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:11.0.4-jdk-stretch
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-gradle-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - add_ssh_keys:
+          fingerprints:
+            - "49:3a:76:61:97:55:7f:96:0a:08:ad:95:4a:e5:02:0d"
+      - run:
+          name: build
+          command: ./gradlew clean build check -s
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-gradle-{{ checksum "build.gradle" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          when: always
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./*
+  deploy:
+    docker:
+      - image: circleci/openjdk:11.0.4-jdk-stretch
+    environment:
+      - APP_NAME=htbhf-smart-stub
+      - CF_DOMAIN=apps.internal
+      - SMOKE_TESTS=./ci_scripts/smoke_tests.sh
+      - BIN_DIR=./bin
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "49:3a:76:61:97:55:7f:96:0a:08:ad:95:4a:e5:02:0d"
+      - attach_workspace:
+          at: .
+      - run:
+          name: Set app version and path
+          command: |
+            export APP_VERSION=`cat version.properties | grep "version" | cut -d'=' -f2`
+            echo "export APP_VERSION=${APP_VERSION}" >> $BASH_ENV
+            echo "export APP_PATH="build/libs/$APP_NAME-$APP_VERSION.jar"" >> $BASH_ENV
+            source $BASH_ENV
+            echo "APP_VERSION=${APP_VERSION}, APP_PATH=${APP_PATH}"
+      - run:
+          name: deploy to dev and staging
+          command: ./ci_scripts/ci_deploy.sh
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

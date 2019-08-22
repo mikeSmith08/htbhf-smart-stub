@@ -67,3 +67,9 @@ test {
 checkstyle {
     toolVersion "8.15"
 }
+
+task updateConfig() {
+    'git submodule update --init --recursive --remote'.execute()
+}
+
+tasks.check.dependsOn updateConfig
