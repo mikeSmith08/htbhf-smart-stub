@@ -46,7 +46,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "uk.gov.dhsc.htbhf:htbhf-common-rest:latest.release"
     implementation "org.apache.commons:commons-lang3:3.9"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
