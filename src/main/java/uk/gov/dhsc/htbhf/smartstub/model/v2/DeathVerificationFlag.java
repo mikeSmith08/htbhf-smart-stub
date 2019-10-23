@@ -1,0 +1,17 @@
+package uk.gov.dhsc.htbhf.smartstub.model.v2;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public enum DeathVerificationFlag {
+
+    N_A("n/a"),
+    DEATH_NOT_VERIFIED("death_not_verified"),
+    LIMITED_SUPPORTING_DOCUMENTATION("limited_supporting_documentation"),
+    PARTIAL_SUPPORTING_DOCUMENTATION("partial_supporting_documentation"),
+    FULL_SUPPORTING_DOCUMENTATION("full_supporting_documentation");
+
+    private String responseValue;
+}
