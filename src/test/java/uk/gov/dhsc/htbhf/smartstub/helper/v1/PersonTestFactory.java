@@ -3,10 +3,10 @@ package uk.gov.dhsc.htbhf.smartstub.helper.v1;
 import uk.gov.dhsc.htbhf.smartstub.model.v1.PersonDTO;
 import uk.gov.dhsc.htbhf.smartstub.service.v1.BenefitsService;
 
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.HOMER_DATE_OF_BIRTH;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.HOMER_FIRST_NAME;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SIMPSON_LAST_NAME;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v1.AddressDTOTestDataFactory.aValidAddress;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v1.TestConstants.HOMER_DATE_OF_BIRTH;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v1.TestConstants.HOMER_FIRST_NAME;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v1.TestConstants.SIMPSON_LAST_NAME;
 
 /**
  * Test data factory for {@link PersonDTO} objects.

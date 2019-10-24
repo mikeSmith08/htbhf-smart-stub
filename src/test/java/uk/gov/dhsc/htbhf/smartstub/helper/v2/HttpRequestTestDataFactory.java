@@ -6,9 +6,9 @@ import org.springframework.http.HttpHeaders;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static uk.gov.dhsc.htbhf.smartstub.helper.v1.TestConstants.HOMER_DATE_OF_BIRTH_STRING;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v1.TestConstants.NINO;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v1.TestConstants.SIMPSON_LAST_NAME;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.HOMER_DATE_OF_BIRTH_STRING;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.NINO;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SIMPSON_LAST_NAME;
 
 public class HttpRequestTestDataFactory {
 
