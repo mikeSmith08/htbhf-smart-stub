@@ -9,7 +9,7 @@ public final class TestConstants {
     public static final String HOMER_DATE_OF_BIRTH_STRING = "1985-12-31";
     public static final LocalDate HOMER_DATE_OF_BIRTH = LocalDate.parse(HOMER_DATE_OF_BIRTH_STRING);
     public static final String HOMER_EMAIL = "homer@simpson.com";
-    public static final String HOMER_MOBILE = "07700900000";
+    public static final String HOMER_MOBILE = "+447700900000";
     public static final String NINO = "EE123456C";
     public static final String MAGGIE_DATE_OF_BIRTH_STRING = "1985-12-31";
     public static final LocalDate MAGGIE_DATE_OF_BIRTH = LocalDate.parse("1985-12-31");

@@ -28,7 +28,7 @@ class RequestHeaderToDWPEligibilityRequestV2ConverterTest {
         //Given
         LocalDate eligibilityDate = LocalDate.now().plusDays(28);
         String eligibilityDateString = eligibilityDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
-        lenient().when(nativeWebRequest.getHeader("eligibleEndDate")).thenReturn(eligibilityDateString);
+        lenient().when(nativeWebRequest.getHeader("eligibilityEndDate")).thenReturn(eligibilityDateString);
         lenient().when(nativeWebRequest.getHeader("ucMonthlyIncomeThreshold")).thenReturn(String.valueOf(TestConstants.UC_MONTHLY_INCOME_THRESHOLD));
         lenient().when(nativeWebRequest.getHeader("surname")).thenReturn(TestConstants.SIMPSON_LAST_NAME);
         lenient().when(nativeWebRequest.getHeader("nino")).thenReturn(TestConstants.NINO);

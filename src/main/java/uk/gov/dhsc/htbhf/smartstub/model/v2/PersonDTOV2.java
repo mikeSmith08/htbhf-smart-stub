@@ -21,7 +21,7 @@ public class PersonDTOV2 {
     private final String surname;
 
     @NotNull
-    @Pattern(regexp = "[a-zA-Z]{2}\\d{6}[a-dA-D]")
+    @Pattern(regexp = "^(?!BG|GB|NK|KN|TN|NT|ZZ)[A-CEGHJ-PR-TW-Z][A-CEGHJ-NPR-TW-Z](\\d{6})[A-D]$")
     @JsonProperty("nino")
     private final String nino;
 
@@ -35,14 +35,18 @@ public class PersonDTOV2 {
     private final String addressLine1;
 
     @JsonProperty("postcode")
+    @Pattern(regexp = "^(GIR ?0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]([0-9ABEHMNPRV-Y])?)|[0-9][A-HJKPS-UW]) ?[0-9][ABD-HJLNP-UW-Z]{2})$")
     private final String postcode;
 
     @JsonProperty("emailAddress")
+    @Pattern(regexp = "(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)")
     private final String emailAddress;
 
     @JsonProperty("mobilePhoneNumber")
+    @Pattern(regexp = "^\\+44\\d{9,10}$")
     private final String mobilePhoneNumber;
 
+    @Past
     @JsonProperty("pregnantDependentDob")
     private LocalDate pregnantDependentDob;
 }
