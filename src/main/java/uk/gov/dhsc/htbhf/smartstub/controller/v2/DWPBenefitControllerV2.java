@@ -14,6 +14,17 @@ import uk.gov.dhsc.htbhf.smartstub.model.v2.IdentityAndEligibilityResponse;
 @AllArgsConstructor
 public class DWPBenefitControllerV2 {
 
+    /**
+     * Determines the eligibility of the claimant from the given request details. The request
+     * object is built from header values in the request using {@link DwpEligibilityRequestResolver}.
+     * The request object is validated, but due to having to use the argument resolver, this
+     * is done manually in {@link DwpEligibilityRequestResolver} rather than using Spring's @Valid
+     * annotation because this doesn't work on request parameters which are built using
+     * an argument resolver.
+     *
+     * @param request The valid request object built up by {@link DwpEligibilityRequestResolver}
+     * @return The identity and eligibility response.
+     */
     @GetMapping
     public IdentityAndEligibilityResponse determineEligibility(DWPEligibilityRequestV2 request) {
         log.debug("Received DWP eligibility request: {}", request);

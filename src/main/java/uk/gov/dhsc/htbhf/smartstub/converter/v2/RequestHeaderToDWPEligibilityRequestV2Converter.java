@@ -15,7 +15,7 @@ public class RequestHeaderToDWPEligibilityRequestV2Converter {
     public DWPEligibilityRequestV2 convert(NativeWebRequest webRequest) {
         return DWPEligibilityRequestV2.builder()
                 .person(buildPerson(webRequest))
-                .eligibleEndDate(nullSafeGetDate(webRequest, "eligibleEndDate"))
+                .eligibilityEndDate(nullSafeGetDate(webRequest, "eligibilityEndDate"))
                 .ucMonthlyIncomeThresholdInPence(nullSafeGetInteger(webRequest, "ucMonthlyIncomeThreshold"))
                 .build();
     }

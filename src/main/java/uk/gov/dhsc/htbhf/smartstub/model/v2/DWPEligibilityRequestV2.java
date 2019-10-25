@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -21,11 +20,10 @@ public class DWPEligibilityRequestV2 {
     @JsonProperty("person")
     private PersonDTOV2 person;
 
-    @NotNull
     @JsonProperty("ucMonthlyIncomeThreshold")
     private final Integer ucMonthlyIncomeThresholdInPence;
 
     @NotNull
-    @JsonProperty("eligibleEndDate")
-    private final LocalDate eligibleEndDate;
+    @JsonProperty("eligibilityEndDate")
+    private final LocalDate eligibilityEndDate;
 }
