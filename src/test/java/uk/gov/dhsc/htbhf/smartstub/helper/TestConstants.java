@@ -1,6 +1,10 @@
 package uk.gov.dhsc.htbhf.smartstub.helper;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 public final class TestConstants {
 
@@ -14,9 +18,24 @@ public final class TestConstants {
     public static final String MAGGIE_DATE_OF_BIRTH_STRING = "1985-12-31";
     public static final LocalDate MAGGIE_DATE_OF_BIRTH = LocalDate.parse("1985-12-31");
     public static final int UC_MONTHLY_INCOME_THRESHOLD = 40800;
+    public static final String HOUSEHOLD_IDENTIFIER = "household1";
 
     public static final String SIMPSONS_ADDRESS_LINE_1 = "742 Evergreen Terrace";
     public static final String SIMPSONS_ADDRESS_LINE_2 = "Mystery Spot";
     public static final String SIMPSONS_TOWN = "Springfield";
     public static final String SIMPSONS_POSTCODE = "AA1 1AA";
+
+    public static final String ADDRESS_LINE_ONE_NOT_MATCHED_SURNAME = "AddressLineOneNotMatched";
+    public static final String POSTCODE_NOT_MATCHED_SURNAME = "PostcodeNotMatched";
+    public static final String MOBILE_NOT_HELD_SURNAME = "MobileNotHeld";
+    public static final String EMAIL_NOT_HELD_SURNAME = "EmailNotHeld";
+    public static final String MOBILE_AND_EMAIL_NOT_HELD_SURNAME = "MobileAndEmailNotHeld";
+    public static final String MOBILE_NOT_MATCHED_SURNAME = "MobileNotMatched";
+    public static final String EMAIL_NOT_MATCHED_SURNAME = "EmailNotMatched";
+    public static final String MOBILE_AND_EMAIL_NOT_MATCHED_SURNAME = "MobileAndEmailNotMatched";
+
+    public static final LocalDate SIX_MONTH_OLD = LocalDate.now().minusMonths(6);
+    public static final LocalDate THREE_YEAR_OLD = LocalDate.now().minusYears(3);
+    public static final List<LocalDate> TWO_CHILDREN = asList(SIX_MONTH_OLD, THREE_YEAR_OLD);
+    public static final List<LocalDate> SINGLE_THREE_YEAR_OLD = singletonList(THREE_YEAR_OLD);
 }
