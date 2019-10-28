@@ -20,6 +20,10 @@ public class PersonDTOV2TestDataFactory {
         return validPersonBuilder().nino(nino).build();
     }
 
+    public static PersonDTOV2 aPersonDTOV2WithSurnameAndNino(String surname, String nino) {
+        return validPersonBuilder().surname(surname).nino(nino).build();
+    }
+
     public static PersonDTOV2 aPersonDTOV2WithPostcode(String postcode) {
         return validPersonBuilder().postcode(postcode).build();
     }
