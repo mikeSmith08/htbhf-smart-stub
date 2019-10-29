@@ -3,10 +3,10 @@ package uk.gov.dhsc.htbhf.smartstub.helper.v2;
 import uk.gov.dhsc.htbhf.smartstub.model.v2.*;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.HOUSEHOLD_IDENTIFIER;
+import static java.util.Collections.emptyList;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.NO_HOUSEHOLD_IDENTIFIER_PROVIDED;
 
 public class IdentityAndEligibilityResponseTestDataFactory {
 
@@ -20,8 +20,8 @@ public class IdentityAndEligibilityResponseTestDataFactory {
                 .addressLine1Match(VerificationOutcome.NOT_SET)
                 .postcodeMatch(VerificationOutcome.NOT_SET)
                 .pregnantChildDOBMatch(VerificationOutcome.NOT_SET)
-                .householdIdentifier(null)
-                .dobOfChildrenUnder4(Collections.emptyList())
+                .householdIdentifier(NO_HOUSEHOLD_IDENTIFIER_PROVIDED)
+                .dobOfChildrenUnder4(emptyList())
                 .deathVerificationFlag(DeathVerificationFlag.N_A)
                 .build();
     }
@@ -36,8 +36,8 @@ public class IdentityAndEligibilityResponseTestDataFactory {
                 .addressLine1Match(VerificationOutcome.NOT_SET)
                 .postcodeMatch(VerificationOutcome.NOT_SET)
                 .pregnantChildDOBMatch(VerificationOutcome.NOT_SET)
-                .householdIdentifier(null)
-                .dobOfChildrenUnder4(Collections.emptyList())
+                .householdIdentifier(NO_HOUSEHOLD_IDENTIFIER_PROVIDED)
+                .dobOfChildrenUnder4(emptyList())
                 .deathVerificationFlag(DeathVerificationFlag.N_A)
                 .build();
     }
@@ -52,8 +52,8 @@ public class IdentityAndEligibilityResponseTestDataFactory {
                 .addressLine1Match(VerificationOutcome.MATCHED)
                 .postcodeMatch(VerificationOutcome.NOT_MATCHED)
                 .pregnantChildDOBMatch(VerificationOutcome.NOT_SET)
-                .householdIdentifier(null)
-                .dobOfChildrenUnder4(Collections.emptyList())
+                .householdIdentifier(NO_HOUSEHOLD_IDENTIFIER_PROVIDED)
+                .dobOfChildrenUnder4(emptyList())
                 .deathVerificationFlag(DeathVerificationFlag.N_A)
                 .build();
     }
@@ -68,8 +68,8 @@ public class IdentityAndEligibilityResponseTestDataFactory {
                 .addressLine1Match(VerificationOutcome.NOT_MATCHED)
                 .postcodeMatch(VerificationOutcome.MATCHED)
                 .pregnantChildDOBMatch(VerificationOutcome.NOT_SET)
-                .householdIdentifier(null)
-                .dobOfChildrenUnder4(Collections.emptyList())
+                .householdIdentifier(NO_HOUSEHOLD_IDENTIFIER_PROVIDED)
+                .dobOfChildrenUnder4(emptyList())
                 .deathVerificationFlag(DeathVerificationFlag.N_A)
                 .build();
     }
@@ -86,7 +86,23 @@ public class IdentityAndEligibilityResponseTestDataFactory {
                 .addressLine1Match(VerificationOutcome.MATCHED)
                 .postcodeMatch(VerificationOutcome.MATCHED)
                 .pregnantChildDOBMatch(VerificationOutcome.NOT_SET)
-                .householdIdentifier(null)
+                .householdIdentifier(NO_HOUSEHOLD_IDENTIFIER_PROVIDED)
+                .deathVerificationFlag(DeathVerificationFlag.N_A)
+                .dobOfChildrenUnder4(childrenDobs)
+                .build();
+    }
+
+    public static IdentityAndEligibilityResponse anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(List<LocalDate> childrenDobs) {
+        return IdentityAndEligibilityResponse.builder()
+                .identityStatus(IdentityOutcome.MATCHED)
+                .eligibilityStatus(EligibilityOutcome.CONFIRMED)
+                .qualifyingBenefits(QualifyingBenefits.UNIVERSAL_CREDIT)
+                .mobilePhoneMatch(VerificationOutcome.MATCHED)
+                .emailAddressMatch(VerificationOutcome.MATCHED)
+                .addressLine1Match(VerificationOutcome.MATCHED)
+                .postcodeMatch(VerificationOutcome.MATCHED)
+                .pregnantChildDOBMatch(VerificationOutcome.NOT_SET)
+                .householdIdentifier(NO_HOUSEHOLD_IDENTIFIER_PROVIDED)
                 .deathVerificationFlag(DeathVerificationFlag.N_A)
                 .dobOfChildrenUnder4(childrenDobs)
                 .build();
