@@ -24,6 +24,14 @@ public class PersonDTOV2TestDataFactory {
         return validPersonBuilder().surname(surname).nino(nino).build();
     }
 
+    public static PersonDTOV2 aPersonDTOV2WithSurnameAndMobile(String surname, String mobile) {
+        return validPersonBuilder().surname(surname).mobilePhoneNumber(mobile).build();
+    }
+
+    public static PersonDTOV2 aPersonDTOV2WithSurnameAndEmail(String surname, String email) {
+        return validPersonBuilder().surname(surname).emailAddress(email).build();
+    }
+
     public static PersonDTOV2 aPersonDTOV2WithPostcode(String postcode) {
         return validPersonBuilder().postcode(postcode).build();
     }
