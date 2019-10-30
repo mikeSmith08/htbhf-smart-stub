@@ -11,18 +11,18 @@ import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.*;
 public class HttpRequestTestDataFactory {
 
     public static HttpEntity<Void> aValidEligibilityHttpEntity() {
-        return buildHttpEntityWithNino(NINO);
+        return anHttpEntityWithNinoAndSurname(VALID_NINO_V2, SIMPSON_LAST_NAME);
     }
 
     public static HttpEntity<Void> anInvalidEligibilityHttpEntity() {
-        return buildHttpEntityWithNino("ZZZZZZZZZ");
+        return anHttpEntityWithNinoAndSurname("ZZZZZZZZZ", SIMPSON_LAST_NAME);
     }
 
-    private static HttpEntity<Void> buildHttpEntityWithNino(String nino) {
+    public static HttpEntity<Void> anHttpEntityWithNinoAndSurname(String nino, String surname) {
         LocalDate eligibilityEndDate = LocalDate.now().plusDays(28);
         String eligibilityEndDateString = DateTimeFormatter.ISO_LOCAL_DATE.format(eligibilityEndDate);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("surname", SIMPSON_LAST_NAME);
+        httpHeaders.add("surname", surname);
         httpHeaders.add("nino", nino);
         httpHeaders.add("dateOfBirth", HOMER_DATE_OF_BIRTH_STRING);
         httpHeaders.add("eligibilityEndDate", eligibilityEndDateString);

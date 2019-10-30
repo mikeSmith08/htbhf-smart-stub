@@ -1,9 +1,8 @@
 package uk.gov.dhsc.htbhf.smartstub.model.v2;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
 public enum DeathVerificationFlag {
 
@@ -14,4 +13,9 @@ public enum DeathVerificationFlag {
     FULL_SUPPORTING_DOCUMENTATION("full_supporting_documentation");
 
     private String responseValue;
+
+    @JsonValue
+    public String getResponseValue() {
+        return responseValue;
+    }
 }
