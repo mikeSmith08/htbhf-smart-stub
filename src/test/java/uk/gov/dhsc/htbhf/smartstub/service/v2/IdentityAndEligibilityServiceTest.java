@@ -20,6 +20,8 @@ import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.TWO_CHILDREN;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2WithPerson;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v2.IdentityAndEligibilityResponseTestDataFactory.*;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithNino;
+import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndEmail;
+import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndMobile;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndNino;
 import static uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService.*;
 
@@ -31,6 +33,7 @@ class IdentityAndEligibilityServiceTest {
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_PARTIAL_CHILDREN_MATCH_NINO = "MC219999A";
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_FULL_CHILDREN_MATCH_NINO = "MC129999A";
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NO_CHILDREN_NINO = "MC009999A";
+    private static final String NOT_SET = null;
 
     private IdentityAndEligibilityService service = new IdentityAndEligibilityService();
 
@@ -102,6 +105,26 @@ class IdentityAndEligibilityServiceTest {
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
+    @ParameterizedTest(name = "Surname={0}, email outcome={1}")
+    @MethodSource("emailVerificationOutcomeForSurnameArguments")
+    void shouldReturnNotProvidedMobileVerificationWhenNoMobileProvided(String surname,
+                                                                       VerificationOutcome emailMatchOutcome) {
+        PersonDTOV2 person = aPersonDTOV2WithSurnameAndMobile(surname, NOT_SET);
+        IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithMatches(VerificationOutcome.NOT_SUPPLIED,
+                emailMatchOutcome, TWO_CHILDREN);
+        runEvaluateEligibilityTest(person, expectedResponse);
+    }
+
+    @ParameterizedTest(name = "Surname={0}, mobile outcome={1}")
+    @MethodSource("mobileVerificationOutcomeForSurnameArguments")
+    void shouldReturnNotProvidedEmailVerificationWhenNoEmailAddressProvided(String surname,
+                                                                            VerificationOutcome mobileMatchOutcome) {
+        PersonDTOV2 person = aPersonDTOV2WithSurnameAndEmail(surname, NOT_SET);
+        IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome,
+                VerificationOutcome.NOT_SUPPLIED, TWO_CHILDREN);
+        runEvaluateEligibilityTest(person, expectedResponse);
+    }
+
     private void runEvaluateEligibilityTest(PersonDTOV2 person, IdentityAndEligibilityResponse expectedResponse) {
         //Given
         DWPEligibilityRequestV2 requestV2 = aValidDWPEligibilityRequestV2WithPerson(person);
@@ -120,6 +143,30 @@ class IdentityAndEligibilityServiceTest {
                 Arguments.of(MOBILE_NOT_MATCHED_SURNAME, VerificationOutcome.NOT_MATCHED, VerificationOutcome.MATCHED),
                 Arguments.of(EMAIL_NOT_MATCHED_SURNAME, VerificationOutcome.MATCHED, VerificationOutcome.NOT_MATCHED),
                 Arguments.of(MOBILE_AND_EMAIL_NOT_MATCHED_SURNAME, VerificationOutcome.NOT_MATCHED, VerificationOutcome.NOT_MATCHED)
+        );
+    }
+
+    //Arguments are Surname, Email Match
+    private static Stream<Arguments> emailVerificationOutcomeForSurnameArguments() {
+        return Stream.of(
+                Arguments.of(MOBILE_NOT_HELD_SURNAME, VerificationOutcome.MATCHED),
+                Arguments.of(EMAIL_NOT_HELD_SURNAME, VerificationOutcome.NOT_HELD),
+                Arguments.of(MOBILE_AND_EMAIL_NOT_HELD_SURNAME, VerificationOutcome.NOT_HELD),
+                Arguments.of(MOBILE_NOT_MATCHED_SURNAME, VerificationOutcome.MATCHED),
+                Arguments.of(EMAIL_NOT_MATCHED_SURNAME, VerificationOutcome.NOT_MATCHED),
+                Arguments.of(MOBILE_AND_EMAIL_NOT_MATCHED_SURNAME, VerificationOutcome.NOT_MATCHED)
+        );
+    }
+
+    //Arguments are Surname, Mobile Match
+    private static Stream<Arguments> mobileVerificationOutcomeForSurnameArguments() {
+        return Stream.of(
+                Arguments.of(MOBILE_NOT_HELD_SURNAME, VerificationOutcome.NOT_HELD),
+                Arguments.of(EMAIL_NOT_HELD_SURNAME, VerificationOutcome.MATCHED),
+                Arguments.of(MOBILE_AND_EMAIL_NOT_HELD_SURNAME, VerificationOutcome.NOT_HELD),
+                Arguments.of(MOBILE_NOT_MATCHED_SURNAME, VerificationOutcome.NOT_MATCHED),
+                Arguments.of(EMAIL_NOT_MATCHED_SURNAME, VerificationOutcome.MATCHED),
+                Arguments.of(MOBILE_AND_EMAIL_NOT_MATCHED_SURNAME, VerificationOutcome.NOT_MATCHED)
         );
     }
 

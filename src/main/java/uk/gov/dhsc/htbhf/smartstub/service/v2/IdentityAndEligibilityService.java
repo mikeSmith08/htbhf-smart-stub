@@ -1,6 +1,7 @@
 package uk.gov.dhsc.htbhf.smartstub.service.v2;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import uk.gov.dhsc.htbhf.smartstub.model.v2.*;
 
@@ -68,7 +69,7 @@ public class IdentityAndEligibilityService {
         }
 
         builder.qualifyingBenefits(QualifyingBenefits.UNIVERSAL_CREDIT);
-        setEmailAndMobileVerificationOutcomes(builder, surname);
+        setEmailAndMobileVerificationOutcomes(builder, request.getPerson());
         setDobOfChildrenUnder4(builder, nino);
         return builder.build();
     }
@@ -79,10 +80,14 @@ public class IdentityAndEligibilityService {
         builder.dobOfChildrenUnder4(createChildren(childrenUnderOne, childrenUnderFour));
     }
 
-    private void setEmailAndMobileVerificationOutcomes(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, String surname) {
-        VerificationOutcomeForSurname verificationOutcomeForSurname = VerificationOutcomeForSurname.getVerificationOutcomesForSurname(surname);
-        builder.mobilePhoneMatch(verificationOutcomeForSurname.getMobileOutcome());
-        builder.emailAddressMatch(verificationOutcomeForSurname.getEmailOutcome());
+    private void setEmailAndMobileVerificationOutcomes(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, PersonDTOV2 person) {
+        VerificationOutcomeForSurname verificationOutcomeForSurname = VerificationOutcomeForSurname.getVerificationOutcomesForSurname(person.getSurname());
+        VerificationOutcome mobileVerificationOutcome = StringUtils.isEmpty(person.getMobilePhoneNumber())
+                ? VerificationOutcome.NOT_SUPPLIED : verificationOutcomeForSurname.getMobileOutcome();
+        builder.mobilePhoneMatch(mobileVerificationOutcome);
+        VerificationOutcome emailVerificationOutcome = StringUtils.isEmpty(person.getEmailAddress())
+                ? VerificationOutcome.NOT_SUPPLIED : verificationOutcomeForSurname.getEmailOutcome();
+        builder.emailAddressMatch(emailVerificationOutcome);
     }
 
     private boolean isAddressNotMatchedSurname(String surname) {
