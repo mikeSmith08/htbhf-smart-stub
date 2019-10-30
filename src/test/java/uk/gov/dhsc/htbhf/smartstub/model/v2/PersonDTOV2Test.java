@@ -49,7 +49,8 @@ class PersonDTOV2Test extends AbstractValidationTest {
             "888888888",
             "ABCDEFGHI",
             "ZQQ123456CZ",
-            "QQ123456T"
+            "QQ123456T",
+            "ZZ999999D"
     })
     void shouldFailValidationWithInvalidNino(String nino) {
         PersonDTOV2 personDTOV2 = aPersonDTOV2WithNino(nino);

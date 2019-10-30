@@ -1,6 +1,5 @@
 package uk.gov.dhsc.htbhf.smartstub.service.v2;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -10,16 +9,20 @@ import uk.gov.dhsc.htbhf.smartstub.model.v2.IdentityAndEligibilityResponse;
 import uk.gov.dhsc.htbhf.smartstub.model.v2.PersonDTOV2;
 import uk.gov.dhsc.htbhf.smartstub.model.v2.VerificationOutcome;
 
+import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.*;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SIMPSON_LAST_NAME;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SINGLE_SIX_MONTH_OLD;
+import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.TWO_CHILDREN;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2WithPerson;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v2.IdentityAndEligibilityResponseTestDataFactory.*;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithNino;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndNino;
+import static uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService.*;
 
-@Disabled
 class IdentityAndEligibilityServiceTest {
 
     private static final String IDENTITY_MATCH_FAILED_NINO = "QQ123456A";
@@ -27,6 +30,7 @@ class IdentityAndEligibilityServiceTest {
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NINO = "MC999999A";
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_PARTIAL_CHILDREN_MATCH_NINO = "MC219999A";
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_FULL_CHILDREN_MATCH_NINO = "MC129999A";
+    private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NO_CHILDREN_NINO = "MC009999A";
 
     private IdentityAndEligibilityService service = new IdentityAndEligibilityService();
 
@@ -53,10 +57,27 @@ class IdentityAndEligibilityServiceTest {
 
     @Test
     void shouldReturnIdentityMatchedEligibilityConfirmedPostcodeNotMatched() {
-        //Given
         PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(POSTCODE_NOT_MATCHED_SURNAME, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NINO);
         IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedPostcodeNotMatchedResponse();
         runEvaluateEligibilityTest(person, expectedResponse);
+    }
+
+    @Test
+    void shouldReturnIdentityMatchedEligibilityConfirmedForPregnantWomanWithNoChildren() {
+        PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(SIMPSON_LAST_NAME, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NO_CHILDREN_NINO);
+        IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(Collections.emptyList());
+        runEvaluateEligibilityTest(person, expectedResponse);
+    }
+
+    @Test
+    void shouldThrowExceptionForExceptionalNino() {
+        //Given
+        PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(SIMPSON_LAST_NAME, EXCEPTION_NINO);
+        DWPEligibilityRequestV2 requestV2 = aValidDWPEligibilityRequestV2WithPerson(person);
+        //When
+        IllegalArgumentException thrown = catchThrowableOfType(() -> service.evaluateEligibility(requestV2), IllegalArgumentException.class);
+        //Then
+        assertThat(thrown).hasMessage("NINO provided (XX999999D) has been configured to trigger an Exception");
     }
 
     @ParameterizedTest(name = "Surname={0}, mobile outcome={1}, email outcome={2}")
@@ -66,7 +87,7 @@ class IdentityAndEligibilityServiceTest {
                                                                              VerificationOutcome emailMatchOutcome) {
         PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(surname, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_PARTIAL_CHILDREN_MATCH_NINO);
         IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome,
-                emailMatchOutcome, SINGLE_THREE_YEAR_OLD);
+                emailMatchOutcome, SINGLE_SIX_MONTH_OLD);
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 

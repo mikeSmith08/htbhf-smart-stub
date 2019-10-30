@@ -1,7 +1,7 @@
 # htbhf-smart-stub
 Service for stubbing out DWP and Card Service provider apis.
 
-## Benefit Eligibility Stubbing
+## V1 Benefit Eligibility Stubbing
 The service returns stubbed responses depending on the national insurance number (nino) which is sent in the request.
 The nino is encoded as follows:
 
@@ -33,6 +33,37 @@ then the stub will return the same value for children under 1 and children under
 * The NINO ZZ999999D can be used if you want to trigger an error within the Smart stub, which will in turn return a 500 response.
 
 The household identifier value is a Base64 generated value based on the NINO.
+
+## V2 Benefit Eligibility and Identity Checking Stubbing
+
+The service returns stubbed responses depending on the national insurance number (NINO) and surname which is sent in the request.
+The NINO is encoded as follows:
+
+ * The first character of the NINO is used to determine the Identity Status:
+   * If the NINO starts with M the identity status is MATCHED, otherwise NOT_MATCHED
+ * The second character of the NINO is used to determine the Eligibility Status:
+   * If the second character of the NINO is N the eligibility status is NOT_CONFIRMED
+   * If the second character of the NINO is C the eligibility status is CONFIRMED
+ * There are 4 verification outcomes specified in the response, `AddressLine1Verification`, `PostcodeVerification`, `MobileVerification` 
+ and `EmailVerification`. The surname is then used to determine these verification outcomes as such:
+   * A surname of `AddressLineOneNotMatched` returns NOT_MATCHED for `AddressLine1Verification`, MATCHED for `PostcodeVerification` and NOT_SET for other verification outcomes
+   * A surname of `PostcodeNotMatched` returns NOT_MATCHED for `PostcodeVerification`, MATCHED for `AddressLine1Verification` and NOT_SET for other verification outcomes
+   * A surname of `MobileNotHeld` returns NOT_HELD for `MobileVerification` and MATCHED for other verification outcomes
+   * A surname of `EmailNotHeld` returns NOT_HELD for `EmailVerification` and MATCHED for other verification outcomes
+   * A surname of `MobileAndEmailNotHeld` returns NOT_HELD for both `EmailVerification` and `MobileVerification` and MATCHED for other verification outcomes
+   * A surname of `MobileNotMatched` returns NOT_MATCHED for `MobileVerification` and MATCHED for other verification outcomes
+   * A surname of `EmailNotMatched` returns NOT_MATCHED for `EmailVerification` and MATCHED for other verification outcomes
+   * A surname of `MobileAndEmailNotMatched` returns NOT_MATCHED for both `EmailVerification` and `MobileVerification` and MATCHED for other verification outcomes
+ * The `QualifyingBenefit` is only set if the Identity Status is matched, the Eligibility Status is confirmed and their address has
+  been matched. If this is the case then then `QualifyingBenefit` is set to `UNIVERSAL_CREDIT`.
+ * The dob of children under 4 is only set if they have a `QualifyingBenefit`.
+ * The first and second digits of the NINO are used to determine the dates of birth of children that will be returned:
+   * The first is the number of children under 1
+   * The second digit is the total number of children under 4 (including those under 1).
+   * If the second digit is smaller than the first digit, then a partial children match response is returned, which simply means
+   that we'll match the total number of children under 4 digit (2nd digit) and ignore the number of children under 1 digit (1st digit).
+  
+* The NINO XX999999D can be used if you want to trigger an error within the Smart stub, which will in turn return a 500 response.
 
 ## postman collection
 Use https://www.getpostman.com/collections/b1e8a55b936abd3879e3 to import a postman collection with api examples.
