@@ -50,7 +50,7 @@ public class PersonDTOV2TestDataFactory {
 
     public static PersonDTOV2 aValidPersonDTOV2WithMandatoryFieldsOnly() {
         return PersonDTOV2.builder()
-                .nino(NINO)
+                .nino(VALID_NINO_V2)
                 .surname(SIMPSON_LAST_NAME)
                 .addressLine1(SIMPSONS_ADDRESS_LINE_1)
                 .dateOfBirth(HOMER_DATE_OF_BIRTH)
@@ -59,7 +59,7 @@ public class PersonDTOV2TestDataFactory {
 
     private static PersonDTOV2.PersonDTOV2Builder validPersonBuilder() {
         return PersonDTOV2.builder()
-                .nino(NINO)
+                .nino(VALID_NINO_V2)
                 .surname(SIMPSON_LAST_NAME)
                 .addressLine1(SIMPSONS_ADDRESS_LINE_1)
                 .postcode(SIMPSONS_POSTCODE)

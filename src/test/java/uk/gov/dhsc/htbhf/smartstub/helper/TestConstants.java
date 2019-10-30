@@ -14,7 +14,8 @@ public final class TestConstants {
     public static final LocalDate HOMER_DATE_OF_BIRTH = LocalDate.parse(HOMER_DATE_OF_BIRTH_STRING);
     public static final String HOMER_EMAIL = "homer@simpson.com";
     public static final String HOMER_MOBILE = "+447700900000";
-    public static final String NINO = "EE123456C";
+    public static final String VALID_NINO_V1 = "EE123456C";
+    public static final String VALID_NINO_V2 = "MC123456C";
     public static final String MAGGIE_DATE_OF_BIRTH_STRING = "1985-12-31";
     public static final LocalDate MAGGIE_DATE_OF_BIRTH = LocalDate.parse("1985-12-31");
     public static final int UC_MONTHLY_INCOME_THRESHOLD = 40800;

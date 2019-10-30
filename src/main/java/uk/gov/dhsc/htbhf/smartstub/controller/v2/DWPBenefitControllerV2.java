@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.dhsc.htbhf.smartstub.model.v2.DWPEligibilityRequestV2;
 import uk.gov.dhsc.htbhf.smartstub.model.v2.IdentityAndEligibilityResponse;
+import uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService;
 
 @RestController
 @RequestMapping("/v2/dwp/benefits")
 @Slf4j
 @AllArgsConstructor
 public class DWPBenefitControllerV2 {
+
+    private IdentityAndEligibilityService identityAndEligibilityService;
 
     /**
      * Determines the eligibility of the claimant from the given request details. The request
@@ -28,7 +31,9 @@ public class DWPBenefitControllerV2 {
     @GetMapping
     public IdentityAndEligibilityResponse determineEligibility(DWPEligibilityRequestV2 request) {
         log.debug("Received DWP eligibility request: {}", request);
-        return IdentityAndEligibilityResponse.builder().build();
+        IdentityAndEligibilityResponse identityAndEligibilityResponse = identityAndEligibilityService.evaluateEligibility(request);
+        log.debug("Returning identity and eligibility response: {}", identityAndEligibilityResponse);
+        return identityAndEligibilityResponse;
     }
 
 }

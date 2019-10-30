@@ -1,6 +1,7 @@
 package uk.gov.dhsc.htbhf.smartstub.service.v2;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import uk.gov.dhsc.htbhf.smartstub.model.v2.*;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import static java.util.Collections.nCopies;
  * in the NINO and Surname provided.
  */
 @Slf4j
+@Component
 public class IdentityAndEligibilityService {
 
     public static final String EXCEPTION_NINO = "XX999999D";
