@@ -26,8 +26,8 @@ public final class TestConstants {
     public static final String SIMPSONS_TOWN = "Springfield";
     public static final String SIMPSONS_POSTCODE = "AA1 1AA";
 
-    public static final LocalDate SIX_MONTH_OLD = LocalDate.now().minusMonths(6);
-    public static final LocalDate THREE_YEAR_OLD = LocalDate.now().minusYears(3);
+    public static final LocalDate SIX_MONTH_OLD = LocalDate.now().minusMonths(6).withDayOfMonth(1);
+    public static final LocalDate THREE_YEAR_OLD = LocalDate.now().minusYears(3).withDayOfMonth(1);
     public static final List<LocalDate> TWO_CHILDREN = asList(SIX_MONTH_OLD, THREE_YEAR_OLD);
     public static final List<LocalDate> SINGLE_THREE_YEAR_OLD = singletonList(THREE_YEAR_OLD);
     public static final List<LocalDate> SINGLE_SIX_MONTH_OLD = singletonList(SIX_MONTH_OLD);

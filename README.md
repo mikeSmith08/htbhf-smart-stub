@@ -62,6 +62,11 @@ The NINO is encoded as follows:
    * The second digit is the total number of children under 4 (including those under 1).
    * If the second digit is smaller than the first digit, then a partial children match response is returned, which simply means
    that we'll match the total number of children under 4 digit (2nd digit) and ignore the number of children under 1 digit (1st digit).
+   * The dates of birth returned will be as such:
+     * Any children under 1 will have a birth day of the first day of the month 6 months ago. e.g. If today is 31 Oct 2019, the date of birth returned
+     for a child under 1 will be 01 Apr 2019. This will be the same for all children under 1.
+     * Any children between 1 and 4 will similarly have a date of birth of the first day of the month 3 years ago. e.g. If today is 31 Oct 2019, the
+     date of birth returned will be 01 Oct 2016 for all children.
   
 * The NINO XX999999D can be used if you want to trigger an error within the Smart stub, which will in turn return a 500 response.
 
