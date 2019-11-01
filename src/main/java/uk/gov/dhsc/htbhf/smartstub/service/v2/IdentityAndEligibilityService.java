@@ -108,9 +108,21 @@ public class IdentityAndEligibilityService {
     }
 
     private List<LocalDate> createChildren(Integer numberOfChildrenUnderOne, Integer numberOfChildrenUnderFour) {
-        List<LocalDate> childrenUnderOne = nCopies(numberOfChildrenUnderOne, LocalDate.now().minusMonths(6));
-        List<LocalDate> childrenBetweenOneAndFour = nCopies(numberOfChildrenUnderFour - numberOfChildrenUnderOne, LocalDate.now().minusYears(3));
+        List<LocalDate> childrenUnderOne = nCopies(numberOfChildrenUnderOne, getDateOfBirthOfUnderOneYearOld());
+        List<LocalDate> childrenBetweenOneAndFour = nCopies(numberOfChildrenUnderFour - numberOfChildrenUnderOne, getDateOfBirthOfThreeYearOld());
         return Stream.concat(childrenUnderOne.stream(), childrenBetweenOneAndFour.stream()).collect(Collectors.toList());
+    }
+
+    // We always make sure that there is no ambiguity over the date by setting it to the
+    // first day of the month 6 months ago.
+    private LocalDate getDateOfBirthOfUnderOneYearOld() {
+        return LocalDate.now().minusMonths(6).withDayOfMonth(1);
+    }
+
+    // We always make sure that there is no ambiguity over the date by setting it to the
+    // first day of the month 3 years ago.
+    private LocalDate getDateOfBirthOfThreeYearOld() {
+        return LocalDate.now().minusYears(3).withDayOfMonth(1);
     }
 
     private Integer getNumberOfChildrenUnderOne(Integer childrenUnderFour, String nino) {
