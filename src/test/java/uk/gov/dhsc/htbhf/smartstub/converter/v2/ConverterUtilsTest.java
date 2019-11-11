@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.context.request.NativeWebRequest;
-import uk.gov.dhsc.htbhf.smartstub.helper.TestConstants;
 
 import java.time.LocalDate;
 
@@ -13,6 +12,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.HOMER_DATE_OF_BIRTH;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.HOMER_DATE_OF_BIRTH_STRING;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.UC_MONTHLY_INCOME_THRESHOLD_IN_PENCE;
 
 @ExtendWith(MockitoExtension.class)
 class ConverterUtilsTest {
@@ -23,11 +25,11 @@ class ConverterUtilsTest {
     @Test
     void shouldGetDate() {
         //Given
-        given(nativeWebRequest.getHeader(any())).willReturn(TestConstants.HOMER_DATE_OF_BIRTH_STRING);
+        given(nativeWebRequest.getHeader(any())).willReturn(HOMER_DATE_OF_BIRTH_STRING);
         //When
         LocalDate dateOfBirth = ConverterUtils.nullSafeGetDate(nativeWebRequest, "dateOfBirth");
         //Then
-        assertThat(dateOfBirth).isEqualTo(TestConstants.HOMER_DATE_OF_BIRTH);
+        assertThat(dateOfBirth).isEqualTo(HOMER_DATE_OF_BIRTH);
         verify(nativeWebRequest).getHeader("dateOfBirth");
     }
 
@@ -49,7 +51,7 @@ class ConverterUtilsTest {
         //When
         Integer threshold = ConverterUtils.nullSafeGetInteger(nativeWebRequest, "ucMonthlyIncomeThreshold");
         //Then
-        assertThat(threshold).isEqualTo(TestConstants.UC_MONTHLY_INCOME_THRESHOLD);
+        assertThat(threshold).isEqualTo(UC_MONTHLY_INCOME_THRESHOLD_IN_PENCE);
         verify(nativeWebRequest).getHeader("ucMonthlyIncomeThreshold");
     }
 

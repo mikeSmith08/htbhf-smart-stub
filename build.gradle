@@ -44,6 +44,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "uk.gov.dhsc.htbhf:htbhf-common-rest:latest.release"
+    implementation "uk.gov.dhsc.htbhf:htbhf-common-dwp-api:latest.release"
     implementation "org.apache.commons:commons-lang3:3.9"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
@@ -52,6 +53,7 @@ dependencies {
     testImplementation "org.junit.vintage:junit-vintage-engine:${junitVersion}"
     testImplementation "org.mockito:mockito-junit-jupiter:2.23.4"
     testImplementation "uk.gov.dhsc.htbhf:htbhf-common-test:latest.release"
+    testImplementation "uk.gov.dhsc.htbhf:htbhf-common-dwp-api-test:latest.release"
 }
 
 test {

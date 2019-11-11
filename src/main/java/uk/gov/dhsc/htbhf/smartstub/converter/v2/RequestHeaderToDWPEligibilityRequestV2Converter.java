@@ -1,8 +1,8 @@
 package uk.gov.dhsc.htbhf.smartstub.converter.v2;
 
 import org.springframework.web.context.request.NativeWebRequest;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.DWPEligibilityRequestV2;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.PersonDTOV2;
+import uk.gov.dhsc.htbhf.dwp.model.v2.DWPEligibilityRequestV2;
+import uk.gov.dhsc.htbhf.dwp.model.v2.PersonDTOV2;
 
 import static uk.gov.dhsc.htbhf.smartstub.converter.v2.ConverterUtils.nullSafeGetDate;
 import static uk.gov.dhsc.htbhf.smartstub.converter.v2.ConverterUtils.nullSafeGetInteger;
