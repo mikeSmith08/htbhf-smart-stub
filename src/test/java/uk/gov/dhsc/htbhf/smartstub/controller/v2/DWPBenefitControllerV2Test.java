@@ -10,9 +10,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.dhsc.htbhf.dwp.model.v2.IdentityAndEligibilityResponse;
+import uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome;
 import uk.gov.dhsc.htbhf.errorhandler.ErrorResponse;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.IdentityAndEligibilityResponse;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.VerificationOutcome;
 import uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService;
 
 import java.net.URI;
@@ -20,15 +20,15 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.dhsc.htbhf.assertions.IntegrationTestAssertions.assertInternalServerErrorResponse;
 import static uk.gov.dhsc.htbhf.assertions.IntegrationTestAssertions.assertValidationErrorInResponse;
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SIMPSON_LAST_NAME;
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.TWO_CHILDREN;
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.VALID_NINO_V2;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.HttpRequestTestDataFactory.aValidEligibilityHttpEntity;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.HttpRequestTestDataFactory.anHttpEntityWithNinoAndSurname;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.HttpRequestTestDataFactory.anInvalidEligibilityHttpEntity;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.IdentityAndEligibilityResponseTestDataFactory.anIdentityMatchFailedResponse;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.IdentityAndEligibilityResponseTestDataFactory.anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.IdentityAndEligibilityResponseTestDataFactory.anIdentityMatchedEligibilityConfirmedUCResponseWithMatches;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.HOMER_NINO_V2;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SIMPSON_SURNAME;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.TWO_CHILDREN;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.HttpRequestTestDataFactory.aValidEligibilityHttpEntity;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.HttpRequestTestDataFactory.anEligibilityHttpEntityWithNinoAndSurname;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.HttpRequestTestDataFactory.anInvalidEligibilityHttpEntity;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdentityAndEligibilityResponseTestDataFactory.anIdentityMatchFailedResponse;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdentityAndEligibilityResponseTestDataFactory.anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdentityAndEligibilityResponseTestDataFactory.anIdentityMatchedEligibilityConfirmedUCResponseWithMatches;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -57,7 +57,7 @@ class DWPBenefitControllerV2Test {
     @Test
     void shouldReturnOkResponseWithIdentityStatusNotMatchedResponse() {
         //Given - making sure we test that the NINO is used from the request
-        HttpEntity request = anHttpEntityWithNinoAndSurname(IDENTITY_NOT_MATCHED_NINO, SIMPSON_LAST_NAME);
+        HttpEntity request = anEligibilityHttpEntityWithNinoAndSurname(IDENTITY_NOT_MATCHED_NINO, SIMPSON_SURNAME);
 
         //When
         ResponseEntity<IdentityAndEligibilityResponse> responseEntity = restTemplate.exchange(ENDPOINT,
@@ -71,7 +71,7 @@ class DWPBenefitControllerV2Test {
     @Test
     void shouldReturnOkResponseWithMobileNotMatchedVerificationResponse() {
         //Given - making sure we test that the surname is used from the request
-        HttpEntity request = anHttpEntityWithNinoAndSurname(VALID_NINO_V2, "MobileNotMatched");
+        HttpEntity request = anEligibilityHttpEntityWithNinoAndSurname(HOMER_NINO_V2, "MobileNotMatched");
 
         //When
         ResponseEntity<IdentityAndEligibilityResponse> responseEntity = restTemplate.exchange(ENDPOINT,
@@ -104,7 +104,7 @@ class DWPBenefitControllerV2Test {
     @Test
     void shouldReturnBadRequestResponseWithExceptionalNino() {
         //Given
-        HttpEntity request = anHttpEntityWithNinoAndSurname(IdentityAndEligibilityService.EXCEPTION_NINO, SIMPSON_LAST_NAME);
+        HttpEntity request = anEligibilityHttpEntityWithNinoAndSurname(IdentityAndEligibilityService.EXCEPTION_NINO, SIMPSON_SURNAME);
 
         //When
         ResponseEntity<ErrorResponse> responseEntity = restTemplate.exchange(ENDPOINT, HttpMethod.GET, request, ErrorResponse.class);

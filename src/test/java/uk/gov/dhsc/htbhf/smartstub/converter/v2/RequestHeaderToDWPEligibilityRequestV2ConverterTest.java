@@ -5,15 +5,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.context.request.NativeWebRequest;
-import uk.gov.dhsc.htbhf.smartstub.helper.TestConstants;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.DWPEligibilityRequestV2;
+import uk.gov.dhsc.htbhf.dwp.model.v2.DWPEligibilityRequestV2;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.lenient;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.*;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2;
 
 @ExtendWith(MockitoExtension.class)
 class RequestHeaderToDWPEligibilityRequestV2ConverterTest {
@@ -29,15 +29,15 @@ class RequestHeaderToDWPEligibilityRequestV2ConverterTest {
         LocalDate eligibilityDate = LocalDate.now().plusDays(28);
         String eligibilityDateString = eligibilityDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
         lenient().when(nativeWebRequest.getHeader("eligibilityEndDate")).thenReturn(eligibilityDateString);
-        lenient().when(nativeWebRequest.getHeader("ucMonthlyIncomeThreshold")).thenReturn(String.valueOf(TestConstants.UC_MONTHLY_INCOME_THRESHOLD));
-        lenient().when(nativeWebRequest.getHeader("surname")).thenReturn(TestConstants.SIMPSON_LAST_NAME);
-        lenient().when(nativeWebRequest.getHeader("nino")).thenReturn(TestConstants.VALID_NINO_V2);
-        lenient().when(nativeWebRequest.getHeader("dateOfBirth")).thenReturn(TestConstants.HOMER_DATE_OF_BIRTH_STRING);
-        lenient().when(nativeWebRequest.getHeader("addressLine1")).thenReturn(TestConstants.SIMPSONS_ADDRESS_LINE_1);
-        lenient().when(nativeWebRequest.getHeader("postcode")).thenReturn(TestConstants.SIMPSONS_POSTCODE);
-        lenient().when(nativeWebRequest.getHeader("emailAddress")).thenReturn(TestConstants.HOMER_EMAIL);
-        lenient().when(nativeWebRequest.getHeader("mobilePhoneNumber")).thenReturn(TestConstants.HOMER_MOBILE);
-        lenient().when(nativeWebRequest.getHeader("pregnantDependentDob")).thenReturn(TestConstants.MAGGIE_DATE_OF_BIRTH_STRING);
+        lenient().when(nativeWebRequest.getHeader("ucMonthlyIncomeThreshold")).thenReturn(String.valueOf(UC_MONTHLY_INCOME_THRESHOLD_IN_PENCE));
+        lenient().when(nativeWebRequest.getHeader("surname")).thenReturn(SIMPSON_SURNAME);
+        lenient().when(nativeWebRequest.getHeader("nino")).thenReturn(HOMER_NINO_V2);
+        lenient().when(nativeWebRequest.getHeader("dateOfBirth")).thenReturn(HOMER_DATE_OF_BIRTH_STRING);
+        lenient().when(nativeWebRequest.getHeader("addressLine1")).thenReturn(SIMPSONS_ADDRESS_LINE_1);
+        lenient().when(nativeWebRequest.getHeader("postcode")).thenReturn(SIMPSONS_POSTCODE);
+        lenient().when(nativeWebRequest.getHeader("emailAddress")).thenReturn(HOMER_EMAIL);
+        lenient().when(nativeWebRequest.getHeader("mobilePhoneNumber")).thenReturn(HOMER_MOBILE);
+        lenient().when(nativeWebRequest.getHeader("pregnantDependentDob")).thenReturn(MAGGIE_DATE_OF_BIRTH_STRING);
         //When
         DWPEligibilityRequestV2 request = converter.convert(nativeWebRequest);
         //Then

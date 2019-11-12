@@ -2,13 +2,13 @@ package uk.gov.dhsc.htbhf.smartstub.service.v2;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.VerificationOutcome;
+import uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome;
 
 import java.util.Arrays;
 
-import static uk.gov.dhsc.htbhf.smartstub.model.v2.VerificationOutcome.MATCHED;
-import static uk.gov.dhsc.htbhf.smartstub.model.v2.VerificationOutcome.NOT_HELD;
-import static uk.gov.dhsc.htbhf.smartstub.model.v2.VerificationOutcome.NOT_MATCHED;
+import static uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome.MATCHED;
+import static uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome.NOT_HELD;
+import static uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome.NOT_MATCHED;
 import static uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService.*;
 
 @Getter

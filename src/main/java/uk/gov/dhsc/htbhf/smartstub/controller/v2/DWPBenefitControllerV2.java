@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.DWPEligibilityRequestV2;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.IdentityAndEligibilityResponse;
+import uk.gov.dhsc.htbhf.dwp.model.v2.DWPEligibilityRequestV2;
+import uk.gov.dhsc.htbhf.dwp.model.v2.IdentityAndEligibilityResponse;
 import uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService;
 
 @RestController

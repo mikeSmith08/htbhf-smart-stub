@@ -4,25 +4,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.DWPEligibilityRequestV2;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.IdentityAndEligibilityResponse;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.PersonDTOV2;
-import uk.gov.dhsc.htbhf.smartstub.model.v2.VerificationOutcome;
+import uk.gov.dhsc.htbhf.dwp.model.v2.DWPEligibilityRequestV2;
+import uk.gov.dhsc.htbhf.dwp.model.v2.IdentityAndEligibilityResponse;
+import uk.gov.dhsc.htbhf.dwp.model.v2.PersonDTOV2;
+import uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome;
 
 import java.util.Collections;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SIMPSON_LAST_NAME;
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.SINGLE_SIX_MONTH_OLD;
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.TWO_CHILDREN;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2WithPerson;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.IdentityAndEligibilityResponseTestDataFactory.*;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithNino;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndEmail;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndMobile;
-import static uk.gov.dhsc.htbhf.smartstub.helper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndNino;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SIMPSON_SURNAME;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SINGLE_SIX_MONTH_OLD;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.TWO_CHILDREN;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2WithPerson;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdentityAndEligibilityResponseTestDataFactory.*;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithNino;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndEmail;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndMobile;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndNino;
 import static uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService.*;
 
 class IdentityAndEligibilityServiceTest {
@@ -67,7 +67,7 @@ class IdentityAndEligibilityServiceTest {
 
     @Test
     void shouldReturnIdentityMatchedEligibilityConfirmedForPregnantWomanWithNoChildren() {
-        PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(SIMPSON_LAST_NAME, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NO_CHILDREN_NINO);
+        PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(SIMPSON_SURNAME, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NO_CHILDREN_NINO);
         IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(Collections.emptyList());
         runEvaluateEligibilityTest(person, expectedResponse);
     }
@@ -75,7 +75,7 @@ class IdentityAndEligibilityServiceTest {
     @Test
     void shouldThrowExceptionForExceptionalNino() {
         //Given
-        PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(SIMPSON_LAST_NAME, EXCEPTION_NINO);
+        PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(SIMPSON_SURNAME, EXCEPTION_NINO);
         DWPEligibilityRequestV2 requestV2 = aValidDWPEligibilityRequestV2WithPerson(person);
         //When
         IllegalArgumentException thrown = catchThrowableOfType(() -> service.evaluateEligibility(requestV2), IllegalArgumentException.class);

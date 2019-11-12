@@ -5,7 +5,7 @@ import uk.gov.dhsc.htbhf.smartstub.model.v1.CardRequestDTO;
 
 import java.util.UUID;
 
-import static uk.gov.dhsc.htbhf.smartstub.helper.TestConstants.*;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.*;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v1.AddressDTOTestDataFactory.aValidAddress;
 
 public class CardRequestDTOTestDataFactory {
@@ -35,8 +35,8 @@ public class CardRequestDTOTestDataFactory {
     private static CardRequestDTO.CardRequestDTOBuilder defaultCardRequestBuilder() {
         return CardRequestDTO.builder()
                 .claimId(UUID.randomUUID().toString())
-                .firstName(HOMER_FIRST_NAME)
-                .lastName(SIMPSON_LAST_NAME)
+                .firstName(HOMER_FORENAME)
+                .lastName(SIMPSON_SURNAME)
                 .dateOfBirth(HOMER_DATE_OF_BIRTH)
                 .email(HOMER_EMAIL)
                 .mobile(HOMER_MOBILE)
