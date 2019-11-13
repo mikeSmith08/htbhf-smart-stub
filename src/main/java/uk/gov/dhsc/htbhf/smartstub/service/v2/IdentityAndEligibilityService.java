@@ -71,7 +71,14 @@ public class IdentityAndEligibilityService {
         builder.qualifyingBenefits(QualifyingBenefits.UNIVERSAL_CREDIT);
         setEmailAndMobileVerificationOutcomes(builder, request.getPerson());
         setDobOfChildrenUnder4(builder, nino);
+        setPregnantChildDOBMatch(builder, request.getPerson());
         return builder.build();
+    }
+
+    private void setPregnantChildDOBMatch(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, PersonDTOV2 person) {
+        if (person.getPregnantDependentDob() == null) {
+            builder.pregnantChildDOBMatch(VerificationOutcome.NOT_SUPPLIED);
+        }
     }
 
     private void setDobOfChildrenUnder4(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, String nino) {

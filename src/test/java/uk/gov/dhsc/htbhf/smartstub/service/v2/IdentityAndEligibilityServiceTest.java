@@ -9,9 +9,9 @@ import uk.gov.dhsc.htbhf.dwp.model.v2.IdentityAndEligibilityResponse;
 import uk.gov.dhsc.htbhf.dwp.model.v2.PersonDTOV2;
 import uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome;
 
-import java.util.Collections;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SIMPSON_SURNAME;
@@ -19,10 +19,7 @@ import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SINGLE_SIX_MONTH_OL
 import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.TWO_CHILDREN;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2WithPerson;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdentityAndEligibilityResponseTestDataFactory.*;
-import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithNino;
-import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndEmail;
-import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndMobile;
-import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.aPersonDTOV2WithSurnameAndNino;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.*;
 import static uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService.*;
 
 class IdentityAndEligibilityServiceTest {
@@ -68,7 +65,15 @@ class IdentityAndEligibilityServiceTest {
     @Test
     void shouldReturnIdentityMatchedEligibilityConfirmedForPregnantWomanWithNoChildren() {
         PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(SIMPSON_SURNAME, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NO_CHILDREN_NINO);
-        IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(Collections.emptyList());
+        IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(emptyList());
+        runEvaluateEligibilityTest(person, expectedResponse);
+    }
+
+    @Test
+    void shouldReturnIdentityMatchedEligibilityConfirmedPregnantDependentNotProvidedChildren() {
+        PersonDTOV2 person = aPersonDTOV2WithPregnantDependantDob(null);
+        IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(VerificationOutcome.NOT_SUPPLIED,
+                TWO_CHILDREN);
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
