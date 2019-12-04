@@ -16,13 +16,17 @@ import uk.gov.dhsc.htbhf.errorhandler.ErrorResponse;
 import uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.dhsc.htbhf.assertions.IntegrationTestAssertions.assertInternalServerErrorResponse;
 import static uk.gov.dhsc.htbhf.assertions.IntegrationTestAssertions.assertValidationErrorInResponse;
+import static uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome.NOT_SET;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.HOMER_NINO_V2;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SIMPSON_SURNAME;
-import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.TWO_CHILDREN;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SIX_MONTH_OLD;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.THREE_YEAR_OLD;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.HttpRequestTestDataFactory.aValidEligibilityHttpEntity;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.HttpRequestTestDataFactory.anEligibilityHttpEntityWithNinoAndSurname;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.HttpRequestTestDataFactory.anInvalidEligibilityHttpEntity;
@@ -36,6 +40,7 @@ class DWPBenefitControllerV2Test {
 
     private static final URI ENDPOINT = URI.create("/v2/dwp/benefits");
     private static final String IDENTITY_NOT_MATCHED_NINO = "AB123456D";
+    private static final List<LocalDate> CHILDREN_DOBS = List.of(SIX_MONTH_OLD, THREE_YEAR_OLD);
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -51,7 +56,7 @@ class DWPBenefitControllerV2Test {
 
         //Then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isEqualTo(anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(TWO_CHILDREN));
+        assertThat(responseEntity.getBody()).isEqualTo(anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(NOT_SET, CHILDREN_DOBS));
     }
 
     @Test
@@ -82,7 +87,7 @@ class DWPBenefitControllerV2Test {
         IdentityAndEligibilityResponse response = anIdentityMatchedEligibilityConfirmedUCResponseWithMatches(
                 VerificationOutcome.NOT_MATCHED,
                 VerificationOutcome.MATCHED,
-                TWO_CHILDREN
+                CHILDREN_DOBS
         );
         assertThat(responseEntity.getBody()).isEqualTo(response);
     }

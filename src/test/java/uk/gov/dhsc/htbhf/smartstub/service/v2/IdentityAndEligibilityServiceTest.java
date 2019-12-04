@@ -9,14 +9,17 @@ import uk.gov.dhsc.htbhf.dwp.model.v2.IdentityAndEligibilityResponse;
 import uk.gov.dhsc.htbhf.dwp.model.v2.PersonDTOV2;
 import uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SIMPSON_SURNAME;
-import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SINGLE_SIX_MONTH_OLD;
-import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.TWO_CHILDREN;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.SIX_MONTH_OLD;
+import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.THREE_YEAR_OLD;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2WithPerson;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdentityAndEligibilityResponseTestDataFactory.*;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.*;
@@ -31,6 +34,7 @@ class IdentityAndEligibilityServiceTest {
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_FULL_CHILDREN_MATCH_NINO = "MC129999A";
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NO_CHILDREN_NINO = "MC009999A";
     private static final String NOT_SET = null;
+    private static final List<LocalDate> CHILDREN_DOBS = List.of(SIX_MONTH_OLD, THREE_YEAR_OLD);
 
     private IdentityAndEligibilityService service = new IdentityAndEligibilityService();
 
@@ -65,7 +69,8 @@ class IdentityAndEligibilityServiceTest {
     @Test
     void shouldReturnIdentityMatchedEligibilityConfirmedForPregnantWomanWithNoChildren() {
         PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(SIMPSON_SURNAME, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NO_CHILDREN_NINO);
-        IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(emptyList());
+        IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(VerificationOutcome.NOT_SET,
+                emptyList());
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
@@ -73,7 +78,7 @@ class IdentityAndEligibilityServiceTest {
     void shouldReturnIdentityMatchedEligibilityConfirmedPregnantDependentNotProvidedChildren() {
         PersonDTOV2 person = aPersonDTOV2WithPregnantDependantDob(null);
         IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithAllMatches(VerificationOutcome.NOT_SUPPLIED,
-                TWO_CHILDREN);
+                CHILDREN_DOBS);
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
@@ -95,7 +100,7 @@ class IdentityAndEligibilityServiceTest {
                                                                              VerificationOutcome emailMatchOutcome) {
         PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(surname, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_PARTIAL_CHILDREN_MATCH_NINO);
         IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome,
-                emailMatchOutcome, SINGLE_SIX_MONTH_OLD);
+                emailMatchOutcome, singletonList(SIX_MONTH_OLD));
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
@@ -106,7 +111,7 @@ class IdentityAndEligibilityServiceTest {
                                                                           VerificationOutcome emailMatchOutcome) {
         PersonDTOV2 person = aPersonDTOV2WithSurnameAndNino(surname, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_FULL_CHILDREN_MATCH_NINO);
         IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome,
-                emailMatchOutcome, TWO_CHILDREN);
+                emailMatchOutcome, CHILDREN_DOBS);
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
@@ -116,7 +121,7 @@ class IdentityAndEligibilityServiceTest {
                                                                        VerificationOutcome emailMatchOutcome) {
         PersonDTOV2 person = aPersonDTOV2WithSurnameAndMobile(surname, NOT_SET);
         IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithMatches(VerificationOutcome.NOT_SUPPLIED,
-                emailMatchOutcome, TWO_CHILDREN);
+                emailMatchOutcome, CHILDREN_DOBS);
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
@@ -126,7 +131,7 @@ class IdentityAndEligibilityServiceTest {
                                                                             VerificationOutcome mobileMatchOutcome) {
         PersonDTOV2 person = aPersonDTOV2WithSurnameAndEmail(surname, NOT_SET);
         IdentityAndEligibilityResponse expectedResponse = anIdentityMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome,
-                VerificationOutcome.NOT_SUPPLIED, TWO_CHILDREN);
+                VerificationOutcome.NOT_SUPPLIED, CHILDREN_DOBS);
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
