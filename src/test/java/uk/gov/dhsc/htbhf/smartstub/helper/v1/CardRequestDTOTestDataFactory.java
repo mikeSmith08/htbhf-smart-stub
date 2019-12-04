@@ -5,7 +5,7 @@ import uk.gov.dhsc.htbhf.smartstub.model.v1.CardRequestDTO;
 
 import java.util.UUID;
 
-import static uk.gov.dhsc.htbhf.dwp.testhelper.TestConstants.*;
+import static uk.gov.dhsc.htbhf.TestConstants.*;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v1.AddressDTOTestDataFactory.aValidAddress;
 
 public class CardRequestDTOTestDataFactory {
