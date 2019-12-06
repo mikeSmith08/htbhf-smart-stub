@@ -22,8 +22,8 @@ import static java.util.Collections.nCopies;
 public class IdentityAndEligibilityService {
 
     public static final String EXCEPTION_NINO = "XX999999D";
-    private static final char MATCHED_CHAR = 'M';
-    private static final char ELIGIBILITY_CONFIRMED_CHAR = 'C';
+    private static final char NOT_MATCHED_CHAR = 'X';
+    private static final char ELIGIBILITY_NOT_CONFIRMED_CHAR = 'X';
     private static final int IDENTITY_STATUS_POSITION = 0;
     private static final int ELIGIBILITY_STATUS_POSITION = 1;
     private static final int CHILDREN_UNDER_ONE_POSITION = 2;
@@ -160,13 +160,13 @@ public class IdentityAndEligibilityService {
         if (identityStatus == IdentityOutcome.NOT_MATCHED) {
             return EligibilityOutcome.NOT_SET;
         }
-        return (nino.charAt(ELIGIBILITY_STATUS_POSITION) == ELIGIBILITY_CONFIRMED_CHAR)
-                ? EligibilityOutcome.CONFIRMED : EligibilityOutcome.NOT_CONFIRMED;
+        return (nino.charAt(ELIGIBILITY_STATUS_POSITION) == ELIGIBILITY_NOT_CONFIRMED_CHAR)
+                ? EligibilityOutcome.NOT_CONFIRMED : EligibilityOutcome.CONFIRMED;
     }
 
     private IdentityOutcome setIdentityStatus(String nino, IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder) {
-        IdentityOutcome identityStatus = (nino.charAt(IDENTITY_STATUS_POSITION) == MATCHED_CHAR)
-                ? IdentityOutcome.MATCHED : IdentityOutcome.NOT_MATCHED;
+        IdentityOutcome identityStatus = (nino.charAt(IDENTITY_STATUS_POSITION) == NOT_MATCHED_CHAR)
+                ? IdentityOutcome.NOT_MATCHED : IdentityOutcome.MATCHED;
         builder.identityStatus(identityStatus);
         return identityStatus;
     }

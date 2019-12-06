@@ -40,10 +40,9 @@ The service returns stubbed responses depending on the national insurance number
 The NINO is encoded as follows:
 
  * The first character of the NINO is used to determine the Identity Status:
-   * If the NINO starts with M the identity status is MATCHED, otherwise NOT_MATCHED
+   * If the NINO starts with X the identity status is NOT_MATCHED, otherwise MATCHED
  * The second character of the NINO is used to determine the Eligibility Status:
-   * If the second character of the NINO is N the eligibility status is NOT_CONFIRMED
-   * If the second character of the NINO is C the eligibility status is CONFIRMED
+   * If the second character of the NINO is X the eligibility status is NOT_CONFIRMED, otherwise CONFIRMED
  * There are 4 verification outcomes specified in the response, `AddressLine1Verification`, `PostcodeVerification`, `MobileVerification` 
  and `EmailVerification`. The surname is then used to determine these verification outcomes as such:
    * A surname of `AddressLineOneNotMatched` returns NOT_MATCHED for `AddressLine1Verification`, MATCHED for `PostcodeVerification` and NOT_SET for other verification outcomes

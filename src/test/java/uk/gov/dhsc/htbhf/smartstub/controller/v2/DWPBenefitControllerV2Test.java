@@ -36,7 +36,7 @@ import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdAndEligibilityResponseTestDa
 class DWPBenefitControllerV2Test {
 
     private static final URI ENDPOINT = URI.create("/v2/dwp/benefits");
-    private static final String IDENTITY_NOT_MATCHED_NINO = "AB123456D";
+    private static final String IDENTITY_NOT_MATCHED_NINO = "XA123456D";
 
     @Autowired
     private TestRestTemplate restTemplate;
