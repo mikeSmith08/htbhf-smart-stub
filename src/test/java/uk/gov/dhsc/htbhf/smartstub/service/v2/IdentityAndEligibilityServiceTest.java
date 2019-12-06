@@ -25,8 +25,8 @@ import static uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityServi
 
 class IdentityAndEligibilityServiceTest {
 
-    private static final String IDENTITY_MATCH_FAILED_NINO = "QQ123456A";
-    private static final String IDENTITY_MATCHED_NOT_ELIGIBLE_NINO = "MN123456A";
+    private static final String IDENTITY_MATCH_FAILED_NINO = "XC123456A";
+    private static final String IDENTITY_MATCHED_NOT_ELIGIBLE_NINO = "MX123456A";
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_NINO = "MC999999A";
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_PARTIAL_CHILDREN_MATCH_NINO = "MC219999A";
     private static final String IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_FULL_CHILDREN_MATCH_NINO = "MC129999A";
