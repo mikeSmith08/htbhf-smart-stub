@@ -21,6 +21,7 @@ import static uk.gov.dhsc.htbhf.TestConstants.TWO_CHILDREN_BORN_AT_START_OF_MONT
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.DWPEligibilityRequestV2TestDataFactory.aValidDWPEligibilityRequestV2WithPerson;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdAndEligibilityResponseTestDataFactory.*;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.PersonDTOV2TestDataFactory.*;
+import static uk.gov.dhsc.htbhf.smartstub.Assertions.assertIsEqualIgnoringHouseholdIdentifier;
 import static uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService.*;
 
 class IdentityAndEligibilityServiceTest {
@@ -137,7 +138,7 @@ class IdentityAndEligibilityServiceTest {
         //When
         IdentityAndEligibilityResponse response = service.evaluateEligibility(requestV2);
         //Then
-        assertThat(response).isEqualTo(expectedResponse);
+        assertIsEqualIgnoringHouseholdIdentifier(response, expectedResponse);
     }
 
     //Arguments are Surname, Mobile Match, Email Match
