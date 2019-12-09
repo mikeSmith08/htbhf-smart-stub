@@ -7,6 +7,7 @@ import uk.gov.dhsc.htbhf.dwp.model.v2.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,6 +64,8 @@ public class IdentityAndEligibilityService {
 
         String surname = request.getPerson().getSurname();
         setAddressVerificationOutcomes(surname, builder);
+
+        builder.householdIdentifier(UUID.randomUUID().toString());
 
         if (isAddressNotMatchedSurname(surname)) {
             return builder.build();

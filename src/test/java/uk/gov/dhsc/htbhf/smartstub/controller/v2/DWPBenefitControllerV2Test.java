@@ -30,6 +30,7 @@ import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.HttpRequestTestDataFactory.anI
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdAndEligibilityResponseTestDataFactory.anIdMatchFailedResponse;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdAndEligibilityResponseTestDataFactory.anIdMatchedEligibilityConfirmedUCResponseWithAllMatches;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.v2.IdAndEligibilityResponseTestDataFactory.anIdMatchedEligibilityConfirmedUCResponseWithMatches;
+import static uk.gov.dhsc.htbhf.smartstub.Assertions.assertIsEqualIgnoringHouseholdIdentifier;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -52,7 +53,8 @@ class DWPBenefitControllerV2Test {
 
         //Then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isEqualTo(anIdMatchedEligibilityConfirmedUCResponseWithAllMatches(NOT_SET, TWO_CHILDREN_BORN_AT_START_OF_MONTH));
+        IdentityAndEligibilityResponse expected = anIdMatchedEligibilityConfirmedUCResponseWithAllMatches(NOT_SET, TWO_CHILDREN_BORN_AT_START_OF_MONTH);
+        assertIsEqualIgnoringHouseholdIdentifier(responseEntity.getBody(), expected);
     }
 
     @Test
@@ -80,12 +82,12 @@ class DWPBenefitControllerV2Test {
 
         //Then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        IdentityAndEligibilityResponse response = anIdMatchedEligibilityConfirmedUCResponseWithMatches(
+        IdentityAndEligibilityResponse expected = anIdMatchedEligibilityConfirmedUCResponseWithMatches(
                 VerificationOutcome.NOT_MATCHED,
                 VerificationOutcome.MATCHED,
                 TWO_CHILDREN_BORN_AT_START_OF_MONTH
         );
-        assertThat(responseEntity.getBody()).isEqualTo(response);
+        assertIsEqualIgnoringHouseholdIdentifier(responseEntity.getBody(), expected);
     }
 
     @Test
