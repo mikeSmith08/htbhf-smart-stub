@@ -7,7 +7,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import uk.gov.dhsc.htbhf.CommonRestConfiguration;
 import uk.gov.dhsc.htbhf.smartstub.controller.v2.DwpEligibilityRequestResolver;
-import uk.gov.dhsc.htbhf.smartstub.converter.v2.RequestHeaderToDWPEligibilityRequestV2Converter;
+import uk.gov.dhsc.htbhf.smartstub.converter.v2.RequestHeaderToDWPEligibilityRequestConverter;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class SmartStubApplication implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        RequestHeaderToDWPEligibilityRequestV2Converter converter = new RequestHeaderToDWPEligibilityRequestV2Converter();
+        RequestHeaderToDWPEligibilityRequestConverter converter = new RequestHeaderToDWPEligibilityRequestConverter();
         argumentResolvers.add(new DwpEligibilityRequestResolver(converter));
     }
 

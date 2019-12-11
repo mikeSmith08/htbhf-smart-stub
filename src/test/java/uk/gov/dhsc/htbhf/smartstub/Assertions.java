@@ -1,7 +1,6 @@
 package uk.gov.dhsc.htbhf.smartstub;
 
-import uk.gov.dhsc.htbhf.dwp.model.v2.IdentityAndEligibilityResponse;
-import uk.gov.dhsc.htbhf.dwp.model.v2.VerificationOutcome;
+import uk.gov.dhsc.htbhf.dwp.model.IdentityAndEligibilityResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
