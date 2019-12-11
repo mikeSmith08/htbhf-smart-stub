@@ -54,7 +54,7 @@ public enum FirstNameScenario {
         }
         try {
             String cardIdByBeforeDash = StringUtils.substringBefore(cardId, "-");
-            Integer foundPrefix = Integer.parseInt(cardIdByBeforeDash);
+            Integer foundPrefix = Integer.valueOf(cardIdByBeforeDash);
             return foundPrefix.equals(cardIdPrefixToMatch);
         } catch (NumberFormatException e) {
             //Prefix is not numeric
