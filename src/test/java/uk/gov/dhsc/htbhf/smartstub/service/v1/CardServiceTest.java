@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v1.CardRequestDTOTestDataFactory.aCardRequestWithFirstName;
 import static uk.gov.dhsc.htbhf.smartstub.helper.v1.DepositFundsRequestDTOTestDataFactory.aValidDepositFundsRequest;
 
@@ -44,7 +44,7 @@ class CardServiceTest {
         //Then
         assertThat(response).isNotNull();
         assertThat(response.getCardAccountId()).isNotNull().startsWith(expectedCardIdPrefix);
-        verifyZeroInteractions(cardBalanceGenerator);
+        verifyNoInteractions(cardBalanceGenerator);
     }
 
     @Test
@@ -55,7 +55,7 @@ class CardServiceTest {
         RuntimeException thrown = catchThrowableOfType(() -> cardService.createCard(cardRequestDTO), RuntimeException.class);
         //Then
         assertThat(thrown).hasMessage("First name provided [CardError] has been configured to trigger an Exception when creating a card");
-        verifyZeroInteractions(cardBalanceGenerator);
+        verifyNoInteractions(cardBalanceGenerator);
     }
 
     @Test
@@ -89,7 +89,7 @@ class CardServiceTest {
         //Then
         assertThat(response).isNotNull();
         assertThat(response.getReferenceId()).isNotNull();
-        verifyZeroInteractions(cardBalanceGenerator);
+        verifyNoInteractions(cardBalanceGenerator);
     }
 
     @Test
@@ -102,6 +102,6 @@ class CardServiceTest {
         //Then
         assertThat(thrown).hasMessage("Card ID provided [4-myId] matches prefix [4] that has been configured to trigger an Exception when trying to deposit "
                 + "funds to the card");
-        verifyZeroInteractions(cardBalanceGenerator);
+        verifyNoInteractions(cardBalanceGenerator);
     }
 }

@@ -3,7 +3,7 @@ package uk.gov.dhsc.htbhf.smartstub.service.v2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import uk.gov.dhsc.htbhf.dwp.model.v2.*;
+import uk.gov.dhsc.htbhf.dwp.model.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,7 +46,7 @@ public class IdentityAndEligibilityService {
      * @param request The request to evaluate
      * @return The response from the above criteria
      */
-    public IdentityAndEligibilityResponse evaluateEligibility(DWPEligibilityRequestV2 request) {
+    public IdentityAndEligibilityResponse evaluateEligibility(DWPEligibilityRequest request) {
 
         String nino = request.getPerson().getNino();
         if (EXCEPTION_NINO.equals(nino)) {
@@ -78,7 +78,7 @@ public class IdentityAndEligibilityService {
         return builder.build();
     }
 
-    private void setPregnantChildDOBMatch(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, PersonDTOV2 person) {
+    private void setPregnantChildDOBMatch(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, PersonDTO person) {
         if (person.getPregnantDependentDob() == null) {
             builder.pregnantChildDOBMatch(VerificationOutcome.NOT_SUPPLIED);
         }
@@ -90,7 +90,7 @@ public class IdentityAndEligibilityService {
         builder.dobOfChildrenUnder4(createChildren(childrenUnderOne, childrenUnderFour));
     }
 
-    private void setEmailAndMobileVerificationOutcomes(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, PersonDTOV2 person) {
+    private void setEmailAndMobileVerificationOutcomes(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, PersonDTO person) {
         VerificationOutcomeForSurname verificationOutcomeForSurname = VerificationOutcomeForSurname.getVerificationOutcomesForSurname(person.getSurname());
         VerificationOutcome mobileVerificationOutcome = StringUtils.isEmpty(person.getMobilePhoneNumber())
                 ? VerificationOutcome.NOT_SUPPLIED : verificationOutcomeForSurname.getMobileOutcome();
