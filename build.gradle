@@ -44,6 +44,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "uk.gov.dhsc.htbhf:htbhf-common-rest:latest.release"
+    implementation "uk.gov.dhsc.htbhf:htbhf-common-test:latest.release"
     implementation "uk.gov.dhsc.htbhf:htbhf-common-dwp-api:latest.release"
     implementation "org.apache.commons:commons-lang3:3.9"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

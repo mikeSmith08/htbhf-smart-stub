@@ -4,15 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import uk.gov.dhsc.htbhf.dwp.model.*;
+import uk.gov.dhsc.htbhf.eligibility.model.testhelper.ChildDobGenerator;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.nCopies;
 
 /**
  * Component responsible for determining the identity and eligibility response for a request based
@@ -27,8 +23,6 @@ public class IdentityAndEligibilityService {
     private static final char ELIGIBILITY_NOT_CONFIRMED_CHAR = 'X';
     private static final int IDENTITY_STATUS_POSITION = 0;
     private static final int ELIGIBILITY_STATUS_POSITION = 1;
-    private static final int CHILDREN_UNDER_ONE_POSITION = 2;
-    private static final int CHILDREN_UNDER_FOUR_POSITION = 3;
 
     public static final String ADDRESS_LINE_ONE_NOT_MATCHED_SURNAME = "AddressLineOneNotMatched";
     public static final String POSTCODE_NOT_MATCHED_SURNAME = "PostcodeNotMatched";
@@ -85,9 +79,7 @@ public class IdentityAndEligibilityService {
     }
 
     private void setDobOfChildrenUnder4(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, String nino) {
-        Integer childrenUnderFour = getNumberOfChildrenUnderFour(nino);
-        Integer childrenUnderOne = getNumberOfChildrenUnderOne(childrenUnderFour, nino);
-        builder.dobOfChildrenUnder4(createChildren(childrenUnderOne, childrenUnderFour));
+        builder.dobOfChildrenUnder4(ChildDobGenerator.createDatesOfBirthForChildren(nino));
     }
 
     private void setEmailAndMobileVerificationOutcomes(IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder, PersonDTO person) {
@@ -115,33 +107,6 @@ public class IdentityAndEligibilityService {
             builder.addressLine1Match(VerificationOutcome.MATCHED);
             builder.postcodeMatch(VerificationOutcome.MATCHED);
         }
-    }
-
-    private List<LocalDate> createChildren(Integer numberOfChildrenUnderOne, Integer numberOfChildrenUnderFour) {
-        List<LocalDate> childrenUnderOne = nCopies(numberOfChildrenUnderOne, getDateOfBirthOfUnderOneYearOld());
-        List<LocalDate> childrenBetweenOneAndFour = nCopies(numberOfChildrenUnderFour - numberOfChildrenUnderOne, getDateOfBirthOfThreeYearOld());
-        return Stream.concat(childrenUnderOne.stream(), childrenBetweenOneAndFour.stream()).collect(Collectors.toList());
-    }
-
-    // We always make sure that there is no ambiguity over the date by setting it to the
-    // first day of the month 6 months ago.
-    private LocalDate getDateOfBirthOfUnderOneYearOld() {
-        return LocalDate.now().minusMonths(6).withDayOfMonth(1);
-    }
-
-    // We always make sure that there is no ambiguity over the date by setting it to the
-    // first day of the month 3 years ago.
-    private LocalDate getDateOfBirthOfThreeYearOld() {
-        return LocalDate.now().minusYears(3).withDayOfMonth(1);
-    }
-
-    private Integer getNumberOfChildrenUnderOne(Integer childrenUnderFour, String nino) {
-        Integer childrenUnderOne = Character.getNumericValue(nino.charAt(CHILDREN_UNDER_ONE_POSITION));
-        return (childrenUnderOne > childrenUnderFour) ? childrenUnderFour : childrenUnderOne;
-    }
-
-    private Integer getNumberOfChildrenUnderFour(String nino) {
-        return Character.getNumericValue(nino.charAt(CHILDREN_UNDER_FOUR_POSITION));
     }
 
     private boolean isAddressLine1NotMatchedSurname(String surname) {
