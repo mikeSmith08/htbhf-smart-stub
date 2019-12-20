@@ -60,11 +60,6 @@ public class IdentityAndEligibilityService {
         setAddressVerificationOutcomes(surname, builder);
 
         builder.householdIdentifier(UUID.randomUUID().toString());
-
-        if (isAddressNotMatchedSurname(surname)) {
-            return builder.build();
-        }
-
         builder.qualifyingBenefits(QualifyingBenefits.UNIVERSAL_CREDIT);
         setEmailAndMobileVerificationOutcomes(builder, request.getPerson());
         setDobOfChildrenUnder4(builder, nino);
@@ -90,10 +85,6 @@ public class IdentityAndEligibilityService {
         VerificationOutcome emailVerificationOutcome = StringUtils.isEmpty(person.getEmailAddress())
                 ? VerificationOutcome.NOT_SUPPLIED : verificationOutcomeForSurname.getEmailOutcome();
         builder.emailAddressMatch(emailVerificationOutcome);
-    }
-
-    private boolean isAddressNotMatchedSurname(String surname) {
-        return isAddressLine1NotMatchedSurname(surname) || isPostcodeNotMatchedSurname(surname);
     }
 
     private void setAddressVerificationOutcomes(String surname, IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder builder) {
@@ -141,14 +132,14 @@ public class IdentityAndEligibilityService {
 
     private IdentityAndEligibilityResponse.IdentityAndEligibilityResponseBuilder setupDefaultBuilder() {
         return IdentityAndEligibilityResponse.builder()
-                .pregnantChildDOBMatch(VerificationOutcome.NOT_SET)
-                .qualifyingBenefits(QualifyingBenefits.NOT_SET)
                 .addressLine1Match(VerificationOutcome.NOT_SET)
                 .postcodeMatch(VerificationOutcome.NOT_SET)
                 .mobilePhoneMatch(VerificationOutcome.NOT_SET)
                 .emailAddressMatch(VerificationOutcome.NOT_SET)
-                .deathVerificationFlag(DeathVerificationFlag.N_A)
+                .qualifyingBenefits(QualifyingBenefits.NOT_SET)
                 .householdIdentifier(NO_HOUSEHOLD_IDENTIFIER_PROVIDED)
-                .dobOfChildrenUnder4(emptyList());
+                .dobOfChildrenUnder4(emptyList())
+                .pregnantChildDOBMatch(VerificationOutcome.NOT_SET)
+                .deathVerificationFlag(DeathVerificationFlag.N_A);
     }
 }
