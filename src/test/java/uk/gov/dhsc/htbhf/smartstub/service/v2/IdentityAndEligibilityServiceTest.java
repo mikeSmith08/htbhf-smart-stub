@@ -29,6 +29,7 @@ import static uk.gov.dhsc.htbhf.dwp.testhelper.DWPEligibilityRequestTestDataFact
 import static uk.gov.dhsc.htbhf.dwp.testhelper.IdAndEligibilityResponseTestDataFactory.*;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.PersonDTOTestDataFactory.*;
 import static uk.gov.dhsc.htbhf.smartstub.Assertions.assertIsEqualIgnoringHouseholdIdentifier;
+import static uk.gov.dhsc.htbhf.smartstub.helper.v2.IdentityAndEligibilityResponseTestDataHelper.addPregnantChildDOBMatch;
 import static uk.gov.dhsc.htbhf.smartstub.service.v2.IdentityAndEligibilityService.*;
 
 class IdentityAndEligibilityServiceTest {
@@ -105,8 +106,10 @@ class IdentityAndEligibilityServiceTest {
                                                                              VerificationOutcome mobileMatchOutcome,
                                                                              VerificationOutcome emailMatchOutcome) {
         PersonDTO person = aPersonDTOWithSurnameAndNino(surname, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_PARTIAL_CHILDREN_MATCH_NINO);
-        IdentityAndEligibilityResponse expectedResponse = anIdMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome, emailMatchOutcome,
-                singletonList(SIX_MONTH_OLD));
+        IdentityAndEligibilityResponse expectedResponse = addPregnantChildDOBMatch(
+                anIdMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome, emailMatchOutcome, singletonList(SIX_MONTH_OLD)),
+                VerificationOutcome.NOT_SET
+        );
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
@@ -116,8 +119,10 @@ class IdentityAndEligibilityServiceTest {
                                                                           VerificationOutcome mobileMatchOutcome,
                                                                           VerificationOutcome emailMatchOutcome) {
         PersonDTO person = aPersonDTOWithSurnameAndNino(surname, IDENTITY_MATCHED_ELIGIBILITY_CONFIRMED_FULL_CHILDREN_MATCH_NINO);
-        IdentityAndEligibilityResponse expectedResponse = anIdMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome, emailMatchOutcome,
-                TWO_CHILDREN_BORN_AT_START_OF_MONTH);
+        IdentityAndEligibilityResponse expectedResponse = addPregnantChildDOBMatch(
+                anIdMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome, emailMatchOutcome, TWO_CHILDREN_BORN_AT_START_OF_MONTH),
+                VerificationOutcome.NOT_SET
+        );
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
@@ -126,8 +131,10 @@ class IdentityAndEligibilityServiceTest {
     void shouldReturnNotProvidedMobileVerificationWhenNoMobileProvided(String surname,
                                                                        VerificationOutcome emailMatchOutcome) {
         PersonDTO person = aPersonDTOWithSurnameAndMobile(surname, NOT_SET);
-        IdentityAndEligibilityResponse expectedResponse = anIdMatchedEligibilityConfirmedUCResponseWithMatches(NOT_SUPPLIED, emailMatchOutcome,
-                TWO_CHILDREN_BORN_AT_START_OF_MONTH);
+        IdentityAndEligibilityResponse expectedResponse = addPregnantChildDOBMatch(
+                anIdMatchedEligibilityConfirmedUCResponseWithMatches(NOT_SUPPLIED, emailMatchOutcome, TWO_CHILDREN_BORN_AT_START_OF_MONTH),
+                VerificationOutcome.NOT_SET
+        );
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
@@ -136,8 +143,10 @@ class IdentityAndEligibilityServiceTest {
     void shouldReturnNotProvidedEmailVerificationWhenNoEmailAddressProvided(String surname,
                                                                             VerificationOutcome mobileMatchOutcome) {
         PersonDTO person = aPersonDTOWithSurnameAndEmail(surname, NOT_SET);
-        IdentityAndEligibilityResponse expectedResponse = anIdMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome, NOT_SUPPLIED,
-                TWO_CHILDREN_BORN_AT_START_OF_MONTH);
+        IdentityAndEligibilityResponse expectedResponse = addPregnantChildDOBMatch(
+                anIdMatchedEligibilityConfirmedUCResponseWithMatches(mobileMatchOutcome, NOT_SUPPLIED, TWO_CHILDREN_BORN_AT_START_OF_MONTH),
+                VerificationOutcome.NOT_SET
+        );
         runEvaluateEligibilityTest(person, expectedResponse);
     }
 
