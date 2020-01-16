@@ -31,6 +31,7 @@ import static uk.gov.dhsc.htbhf.dwp.testhelper.IdAndEligibilityResponseTestDataF
 import static uk.gov.dhsc.htbhf.dwp.testhelper.IdAndEligibilityResponseTestDataFactory.anIdMatchedEligibilityConfirmedUCResponseWithAllMatches;
 import static uk.gov.dhsc.htbhf.dwp.testhelper.IdAndEligibilityResponseTestDataFactory.anIdMatchedEligibilityConfirmedUCResponseWithMatches;
 import static uk.gov.dhsc.htbhf.smartstub.Assertions.assertIsEqualIgnoringHouseholdIdentifier;
+import static uk.gov.dhsc.htbhf.smartstub.helper.v2.IdentityAndEligibilityResponseTestDataHelper.addPregnantChildDOBMatch;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -82,11 +83,7 @@ class DWPBenefitControllerV2Test {
 
         //Then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        IdentityAndEligibilityResponse expected = anIdMatchedEligibilityConfirmedUCResponseWithMatches(
-                VerificationOutcome.NOT_MATCHED,
-                VerificationOutcome.MATCHED,
-                TWO_CHILDREN_BORN_AT_START_OF_MONTH
-        );
+        IdentityAndEligibilityResponse expected = buildEmailNotMatchedResponse();
         assertIsEqualIgnoringHouseholdIdentifier(responseEntity.getBody(), expected);
     }
 
@@ -114,6 +111,16 @@ class DWPBenefitControllerV2Test {
 
         //Then
         assertInternalServerErrorResponse(responseEntity);
+    }
+
+    private IdentityAndEligibilityResponse buildEmailNotMatchedResponse() {
+        return addPregnantChildDOBMatch(
+                anIdMatchedEligibilityConfirmedUCResponseWithMatches(
+                        VerificationOutcome.NOT_MATCHED,
+                        VerificationOutcome.MATCHED,
+                        TWO_CHILDREN_BORN_AT_START_OF_MONTH
+                ),
+                NOT_SET);
     }
 
 }
